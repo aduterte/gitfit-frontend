@@ -7,8 +7,8 @@ export default function CreateWorkout(){
     const [selected, setSelected] = useRecoilState(selectedExeForWorkout)
     return (
         <div>
-            {selected.name} {selected.name && <span onClick={() => setSelected({})}> X </span>}
-            {selected.name && <CreateWorkoutForm/>}
+            {selected.name} {selected.name && <span onClick={() => setSelected({})}> x </span>}
+            {selected.name && <CreateWorkoutForm exe={selected}/>}
         </div>
     )
 }

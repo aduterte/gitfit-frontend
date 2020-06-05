@@ -32,7 +32,7 @@ export default function Exercise(props){
                 <h4>Difficulty</h4>
                 <p>{props.exe.difficulty}</p>
             </div>
-            <div>
+            <div className="exercise-card-bottom">
                 <div>
                     view details
                 </div>

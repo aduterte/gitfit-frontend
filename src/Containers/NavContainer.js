@@ -1,6 +1,7 @@
 import React from "react"
 import { userAtom } from "../Atoms/Atoms"
 import { useRecoilValue } from "recoil"
+import { Link } from "react-router-dom"
 
 export default function Nav(){
 
@@ -13,7 +14,7 @@ export default function Nav(){
             </div>
             <div id="nav-menu-container">
                 {user.name && <div>Welcome, {user.name}</div>}
-                <div>Button 1</div>
+                <Link to="/create-routine"><div>create routne</div></Link>
                 <div>Button 2</div>
             </div>
         </div>

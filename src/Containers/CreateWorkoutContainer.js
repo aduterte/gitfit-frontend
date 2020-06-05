@@ -18,7 +18,7 @@ export default function CreateWorkoutContainer(){
         return filtered
     }
    
-    console.log(search)
+   
     return (
         <div id="create-workout-container">
             <div className="create-workout-column">

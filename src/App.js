@@ -1,25 +1,41 @@
-import React, {useState, useEffect} from 'react';
-import { userAtom, exeAtom } from "./Atoms/Atoms"
-import { useRecoilState } from "recoil"
-import './App.css';
-import Exercise from "./Components/Exercise"
+import React, {useEffect} from 'react';
+import { userAtom, exeAtom, userWorkouts } from "./Atoms/Atoms"
+import { useSetRecoilState } from "recoil"
+import './App.css'
 import {URL} from "./constants/index"
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
 import Nav from "./Containers/NavContainer"
 import CreateWorkoutContainer from "./Containers/CreateWorkoutContainer"
+import CreateRoutineContainer from './Containers/CreateRoutineContainer'
+import Footer from "./Components/Footer"
 
 function App() {
 
-  const [user, setUser] = useRecoilState(userAtom),
-    [exercises, setExercises] = useRecoilState(exeAtom)
-
-  const [workout, setWorkout] = useState({})
+  const setUser = useSetRecoilState (userAtom),
+    setExercises = useSetRecoilState (exeAtom),
+    setWorkouts = useSetRecoilState(userWorkouts)
 
   useEffect(()=>{
     fetch(`${URL}/users/1`)
     .then(resp => resp.json())
-    .then(data => setUser(data))
+    .then(user =>{ 
+      setUser(user)
+      setWorkouts(user.workouts)
+    })
   },[setUser])
+
+  // if(localStorage.getItem("token")){
+  //   fetch("https://young-meadow-44827.herokuapp.com/login", {
+  //     headers: {
+  //       "Authenticate": localStorage.token
+  //     }
+  //   })
+  //   .then(res => res.json())
+  // .then(user=> {
+      
+  //     this.handleLogin(user)
+  //     //if error, don't update the state
+  //   })
 
   useEffect(()=>{
     fetch(`${URL}/exercises`)
@@ -27,19 +43,19 @@ function App() {
     .then(data => setExercises(data))
   },[setExercises])
 
-  // useEffect(()=>{
-  //   fetch(`${URL}/workouts/7`)
-  //   .then(resp => resp.json())
-  //   .then(data => setWorkout(data))
-  // },[])
-  
-  // console.log(workout)
   return (
     <Router>
       <div className="App">
         <Nav />
-        <CreateWorkoutContainer/>
-     
+        <Switch>
+          <Route path="/create-workout">
+            <CreateWorkoutContainer/>
+          </Route>
+          <Route path="/create-routine">
+            <CreateRoutineContainer />
+          </Route>
+        </Switch>
+        {/* <Footer /> */}
       </div>
     </Router>
   );

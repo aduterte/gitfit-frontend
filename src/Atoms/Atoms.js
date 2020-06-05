@@ -5,6 +5,11 @@ export const userAtom = atom({
     default: {}
 })
 
+export const userWorkouts = atom({
+    key: "user-workouts",
+    default: []
+})
+
 export const exeAtom = atom({
     key: "exercises",
     default: []
