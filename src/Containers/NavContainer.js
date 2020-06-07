@@ -1,11 +1,16 @@
 import React from "react"
 import { userAtom } from "../Atoms/Atoms"
-import { useRecoilValue } from "recoil"
+import { useRecoilState } from "recoil"
 import { Link } from "react-router-dom"
 
 export default function Nav(){
 
-    const user = useRecoilValue(userAtom)
+    const [user, setUser] = useRecoilState(userAtom)
+
+    const handleLogout = () => {
+        setUser({})
+        localStorage.removeItem("token")
+    }
 
     return (
         <div id="nav-bar">
@@ -14,8 +19,9 @@ export default function Nav(){
             </div>
             <div id="nav-menu-container">
                 {user.name && <div>Welcome, {user.name}</div>}
-                <Link to="/create-routine"><div>create routne</div></Link>
-                <div>Button 2</div>
+                <Link to="/create-routine"><div> create routne </div></Link>
+                <Link to="/create-workout"><div> create workout </div></Link>
+                <div onClick={handleLogout}> Log out </div>
             </div>
         </div>
     )

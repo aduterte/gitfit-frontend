@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { userAtom, selectedExeForWorkout, userWorkouts } from "../Atoms/Atoms"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue   } from "recoil"
 import { URL } from "../constants/index"
-import { useSetRecoilState } from "recoil/dist/recoil.production"
+
 
 
 export default function CreateWorkoutForm(props){
@@ -11,8 +11,8 @@ export default function CreateWorkoutForm(props){
         [repWeightField, setRepWeightField] = useState([{ reps: 0, weight: 0 }]),
         [resistField, setResistField] = useState([{ reps: 0, resistance: ""}]),
         [durationField, setDurationField] = useState([{ minutes: 0, seconds: 0 }]),
-        [user, setUser ]= useRecoilState(userAtom),
-        setExercise = useSetRecoilState(selectedExeForWorkout),
+        user= useRecoilValue(userAtom),
+        [exercise, setExercise] = useRecoilState(selectedExeForWorkout),
         [workouts, setWorkouts] = useRecoilState(userWorkouts)
 
   
@@ -94,14 +94,15 @@ export default function CreateWorkoutForm(props){
         } else if (type==="time"){
             sets = durationField
         }
+        
         const obj = {
             user_id: user.id,
             exercise_id: props.exe.id,
             sets: sets,
             type_name: type,
-            name: props.exe.name
+            name: exercise.name
         }
-
+        setExercise({})
         fetch(`${URL}/workouts`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},

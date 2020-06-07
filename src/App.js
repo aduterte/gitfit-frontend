@@ -1,41 +1,34 @@
 import React, {useEffect} from 'react';
 import { userAtom, exeAtom, userWorkouts } from "./Atoms/Atoms"
-import { useSetRecoilState } from "recoil"
+import { useSetRecoilState, useRecoilState } from "recoil"
 import './App.css'
 import {URL} from "./constants/index"
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 import Nav from "./Containers/NavContainer"
 import CreateWorkoutContainer from "./Containers/CreateWorkoutContainer"
 import CreateRoutineContainer from './Containers/CreateRoutineContainer'
 import Footer from "./Components/Footer"
+import ProfileContainer from "./Containers/ProfileContainer"
+import LoginContainer from './Containers/LoginContainer';
 
 function App() {
 
-  const setUser = useSetRecoilState (userAtom),
+  const [user, setUser] = useRecoilState (userAtom),
     setExercises = useSetRecoilState (exeAtom),
     setWorkouts = useSetRecoilState(userWorkouts)
 
   useEffect(()=>{
-    fetch(`${URL}/users/1`)
-    .then(resp => resp.json())
-    .then(user =>{ 
-      setUser(user)
-      setWorkouts(user.workouts)
-    })
-  },[setUser])
-
-  // if(localStorage.getItem("token")){
-  //   fetch("https://young-meadow-44827.herokuapp.com/login", {
-  //     headers: {
-  //       "Authenticate": localStorage.token
-  //     }
-  //   })
-  //   .then(res => res.json())
-  // .then(user=> {
-      
-  //     this.handleLogin(user)
-  //     //if error, don't update the state
-  //   })
+    if(localStorage.getItem("token")) {
+      fetch(`${URL}/login`, {
+        headers: {"Authenticate": localStorage.token}
+      })
+      .then(resp => resp.json())
+      .then(user =>{ 
+        setUser(user)
+        setWorkouts(user.workouts)
+      })
+    }
+  },[setUser, setWorkouts])
 
   useEffect(()=>{
     fetch(`${URL}/exercises`)
@@ -49,10 +42,16 @@ function App() {
         <Nav />
         <Switch>
           <Route path="/create-workout">
-            <CreateWorkoutContainer/>
+            {user.name ? <CreateWorkoutContainer/> : <Redirect to="/login"/>}
           </Route>
           <Route path="/create-routine">
-            <CreateRoutineContainer />
+            {user.name ? <CreateRoutineContainer />: <Redirect to="/login"/>}
+          </Route>
+          <Route path="/profile">
+            {user.name ? <ProfileContainer/>: <Redirect to="/login"/>}
+          </Route>
+          <Route path="/login">
+            {!user.name ? <LoginContainer/>: <Redirect to="/profile"/>}
           </Route>
         </Switch>
         {/* <Footer /> */}

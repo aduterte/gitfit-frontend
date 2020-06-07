@@ -1,11 +1,12 @@
-import React from "react"
+import React, {useState} from "react"
 import {selectedExeForWorkout} from "../Atoms/Atoms"
 import { useSetRecoilState } from "recoil"
 
 export default function Exercise(props){
 
     const style = {backgroundImage: `url('${props.exe.image1}')`},
-        setSelected = useSetRecoilState(selectedExeForWorkout)
+        setSelected = useSetRecoilState(selectedExeForWorkout),
+        [showModal, setShowModal] = useState(false)
 
     function handleOnClick(){
         setSelected(props.exe)    
@@ -33,11 +34,21 @@ export default function Exercise(props){
                 <p>{props.exe.difficulty}</p>
             </div>
             <div className="exercise-card-bottom">
-                <div>
+                <div onClick={()=>setShowModal(!showModal)}>
                     view details
                 </div>
                 <div onClick={handleOnClick}> 
                     add to workout
+                </div>
+            </div>
+            <div className="exercise-modal" style={showModal ? {display: "flex"} :{ display: "none"}}>
+                <div className="exercise-modal-content">
+                    <div onClick={()=>setShowModal(!showModal)}>
+                    CLOSE
+                    </div>
+                    <div>
+
+                    </div>
                 </div>
             </div>
         </div>

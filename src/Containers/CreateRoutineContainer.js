@@ -47,20 +47,37 @@ export default function CreateRoutineContainer(){
             })
         })
     }
+    const removeWorkout = (i) => {
+        console.log("im clicked")
+        const values = [...selWorkouts]
+        values.splice(i, 1)
+        setSelWorkouts(values)
+    }
+
+    const sortedWorkouts = () => {
+        const arr = [...workouts]
+        return arr.sort((a,b) => {
+            if(a.name < b.name){return -1}
+            if(b.name < a.name){return 1}
+            return 0
+        })
+        // return sorted        
+    }
+  
     return (
-        <div>
+        <div id="create-routine-container">
             <div>
                 <h3>Create Routine</h3>
                 <form onSubmit={handleSubmit}>
-                    <div><input value={routineName} placeholder="Enter Routine Name" onChange={newRoutineChange}/></div>
+                    <div><input value={routineName} placeholder="Enter Routine Name" onChange={newRoutineChange} required/></div>
                     
-                    {selWorkouts.map((sw)=> <div>{sw.name}</div>)}
+                    {selWorkouts.map((sw, i) => <div key={i} onClick={()=>removeWorkout(i)}>{sw.name}</div>)}
                     <div><input type="submit" value="New Routine"/></div>
                 </form>
                 
             </div>
-            <div>
-                {workouts.map(wk => <WorkoutCard wk={wk} key={wk.id} addWk={handleAddWorkout}/>)}
+            <div id="workout-selection">
+                {sortedWorkouts().map((wk, i) => <WorkoutCard wk={wk} key={wk.id} index={i} addWk={handleAddWorkout}/>)}
             </div>
             
         </div>
