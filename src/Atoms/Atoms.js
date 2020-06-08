@@ -22,5 +22,5 @@ export const searchExe = atom({
 
 export const selectedExeForWorkout = atom({
     key: "selected-exercise-for-workout",
-    default: {}
+    default: []
 })

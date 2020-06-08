@@ -12,8 +12,8 @@ export default function ProfileContainer(){
             <div id="profile-info">
                 <h2>{user.name}</h2>
                 <h4>Tools</h4>
-                <Link to="/create-routine"><div>Create a Routine</div></Link>
-                <Link to="/create-workout"><div>Create an Exercise</div></Link>
+                
+                <Link to="/create-workout"><div>Create a Routine</div></Link>
                 
                 
             </div>

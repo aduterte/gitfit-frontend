@@ -1,15 +1,15 @@
 import React, {useState} from "react"
 import {selectedExeForWorkout} from "../Atoms/Atoms"
-import { useSetRecoilState } from "recoil"
+import { useRecoilState } from "recoil"
 
 export default function Exercise(props){
 
     const style = {backgroundImage: `url('${props.exe.image1}')`},
-        setSelected = useSetRecoilState(selectedExeForWorkout),
+        [selected, setSelected] = useRecoilState(selectedExeForWorkout),
         [showModal, setShowModal] = useState(false)
 
     function handleOnClick(){
-        setSelected(props.exe)    
+setSelected([...selected, {name: props.exe.name, sets:[], type_name: "", exercise_id: props.exe.id}])    
     }
     
     return(
@@ -38,7 +38,7 @@ export default function Exercise(props){
                     view details
                 </div>
                 <div onClick={handleOnClick}> 
-                    add to workout
+                    add to routine
                 </div>
             </div>
             <div className="exercise-modal" style={showModal ? {display: "flex"} :{ display: "none"}}>

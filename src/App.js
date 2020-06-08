@@ -6,7 +6,6 @@ import {URL} from "./constants/index"
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 import Nav from "./Containers/NavContainer"
 import CreateWorkoutContainer from "./Containers/CreateWorkoutContainer"
-import CreateRoutineContainer from './Containers/CreateRoutineContainer'
 import Footer from "./Components/Footer"
 import ProfileContainer from "./Containers/ProfileContainer"
 import LoginContainer from './Containers/LoginContainer';
@@ -44,9 +43,7 @@ function App() {
           <Route path="/create-workout">
             {user.name ? <CreateWorkoutContainer/> : <Redirect to="/login"/>}
           </Route>
-          <Route path="/create-routine">
-            {user.name ? <CreateRoutineContainer />: <Redirect to="/login"/>}
-          </Route>
+          
           <Route path="/profile">
             {user.name ? <ProfileContainer/>: <Redirect to="/login"/>}
           </Route>

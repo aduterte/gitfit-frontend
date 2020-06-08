@@ -1,9 +1,6 @@
 import React, { useState } from "react"
-import { userAtom, selectedExeForWorkout, userWorkouts } from "../Atoms/Atoms"
-import { useRecoilState, useRecoilValue   } from "recoil"
-import { URL } from "../constants/index"
-
-
+import { selectedExeForWorkout } from "../Atoms/Atoms"
+import { useRecoilState } from "recoil"
 
 export default function CreateWorkoutForm(props){
 
@@ -11,21 +8,27 @@ export default function CreateWorkoutForm(props){
         [repWeightField, setRepWeightField] = useState([{ reps: 0, weight: 0 }]),
         [resistField, setResistField] = useState([{ reps: 0, resistance: ""}]),
         [durationField, setDurationField] = useState([{ minutes: 0, seconds: 0 }]),
-        user= useRecoilValue(userAtom),
-        [exercise, setExercise] = useRecoilState(selectedExeForWorkout),
-        [workouts, setWorkouts] = useRecoilState(userWorkouts)
+        [selected, setSelected] = useRecoilState(selectedExeForWorkout)
 
   
-    const handleTypeChange = (e) => {setType(e.target.value)}
+    const handleTypeChange = (e) => {
+        setType(e.target.value)
+        const array = [...selected]
+        array[props.index] = {...array[props.index], type_name: e.target.value}
+        setSelected(array)
+        console.log(props.index, array)
+    }
 
     const handleRepWeight = (i,e) => {
-        const values = [...repWeightField]
+        const array = [...selected]
+        array[props.index] = {...array[props.index], sets: [...repWeightField]}
         if (e.target.name === `reps${i}`){
-            values[i].reps = e.target.value
+            array[props.index].sets[i] = {...array[props.index].sets[i], reps: e.target.value}
         } else {
-            values[i].weight = e.target.value
+            array[props.index].sets[i] = {...array[props.index].sets[i], weight: e.target.value}
         }
-        setRepWeightField(values)
+        setRepWeightField(array[props.index].sets)
+        setSelected(array)
     }
     
     const addRepWeightField = () => {
@@ -41,13 +44,15 @@ export default function CreateWorkoutForm(props){
     }
 
     const handleResist = (i,e) => {
-        const values = [...resistField]
-        if (e.target.name === `reps${i}`){
-            values[i].reps = e.target.value
+        const array = [...selected]
+        array[props.index] = {...array[props.index], sets: [...resistField]}
+        if (e.target.name === `reps${i}`){ 
+            array[props.index].sets[i] = {...array[props.index].sets[i], reps: e.target.value}
         } else {
-            values[i].resistance = e.target.value
+            array[props.index].sets[i] = {...array[props.index].sets[i], resistance: e.target.value}
         }
-        setResistField(values)
+        setResistField(array[props.index].sets)
+        setSelected(array)
     }
     
     const addResistField = () => {
@@ -63,13 +68,15 @@ export default function CreateWorkoutForm(props){
     }
 
     const handleDuration = (i,e) => {
-        const values = [...durationField]
-        if (e.target.name === `minutes${i}`){
-            values[i].minutes = e.target.value
+        const array = [...selected]
+        array[props.index] = {...array[props.index], sets: [...durationField]}
+        if (e.target.name === `reps${i}`){
+            array[props.index].sets[i] = {...array[props.index].sets[i], minutes: e.target.value}
         } else {
-            values[i].seconds = e.target.value
+            array[props.index].sets[i] = {...array[props.index].sets[i], seconds: e.target.value}
         }
-        setDurationField(values)
+        setDurationField(array[props.index].sets)
+        setSelected(array)
     }
     
     const addDurationField = () => {
@@ -84,62 +91,32 @@ export default function CreateWorkoutForm(props){
         setDurationField(values)
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        let sets = []
-        if(type==="weights"){
-            sets = repWeightField
-        } else if (type==="resistance"){
-            sets = resistField
-        } else if (type==="time"){
-            sets = durationField
-        }
-        
-        const obj = {
-            user_id: user.id,
-            exercise_id: props.exe.id,
-            sets: sets,
-            type_name: type,
-            name: exercise.name
-        }
-        setExercise({})
-        fetch(`${URL}/workouts`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(obj)
-        }).then(resp => resp.json())
-        .then(data => setWorkouts([...workouts, data]))
-        
-        
-    }
+   
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <select onChange={handleTypeChange}>
-                    <option>Select</option>
-                    <option value="weights">Weights</option>
-                    <option value="resistance">Resistance</option>
-                    <option value="time">Time</option>
-                </select>
-                {/* {type && <input type="number" value={setsCount} onChange={handleSetsCountsChange} min="0" max="10"/>} */}
-                {type === "weights" && 
-                repWeightField.map((r,i) => 
-                <div key={i}>Reps: <input type="number" min="0" value={r.reps} name={`reps${i}`} onChange={event => handleRepWeight(i, event)}/> Weight: <input type="number" min="0" step="0.5" value={r.weight}  name={`weight${i}`} onChange={event =>handleRepWeight(i, event)}/> 
-                {i > 0 && <span onClick={()=>removeRepWeightField(i)}>-</span>}
-                {+i === repWeightField.length - 1 && <span onClick={addRepWeightField}>+</span>}</div>)
-                }
-                {type === "resistance" && 
-                resistField.map((r,i) => 
-                <div key={i}>Reps: <input type="number" min="0" value={r.reps} name={`reps${i}`} onChange={event => handleResist(i, event)}/> Weight: <input type="text" value={r.resistance}  name={`resistance${i}`} onChange={event =>handleResist(i, event)}/> {+i > 0 && <span onClick={()=>removeResistField(i)}>-</span>}{+i === resistField.length -1 && <span onClick={addResistField}>+</span>}</div>)
-                }
-                {type === "time" && 
-                durationField.map((r,i) => 
-                <div key={i}>Minutes: <input type="number" min="0" value={r.minutes} name={`minutes${i}`} onChange={event => handleDuration(i, event)}/> Seconds: <input type="text" value={r.seconds}  name={`seconds${i}`} onChange={event =>handleDuration(i, event)}/> 
-                {i > 0 && <span onClick={()=>removeDurationField(i)}>-</span>}
-                {+i === durationField.length - 1 && <span onClick={addDurationField}>+</span>}</div>)
-                }
-                <input type="submit"/>
-            </form>
+            <select onChange={handleTypeChange}>
+                <option>Select</option>
+                <option value="weights">Weights</option>
+                <option value="resistance">Resistance</option>
+                <option value="time">Time</option>
+            </select>
+            {/* {type && <input type="number" value={setsCount} onChange={handleSetsCountsChange} min="0" max="10"/>} */}
+            {type === "weights" && 
+            repWeightField.map((r,i) => 
+            <div key={i}>Reps: <input type="number" min="0" value={r.reps} name={`reps${i}`} onChange={event => handleRepWeight(i, event)}/> Weight: <input type="number" min="0" step="0.5" value={r.weight}  name={`weight${i}`} onChange={event =>handleRepWeight(i, event)}/> 
+            {i > 0 && <span onClick={()=>removeRepWeightField(i)}>-</span>}
+            {+i === repWeightField.length - 1 && <span onClick={addRepWeightField}>+</span>}</div>)
+            }
+            {type === "resistance" && 
+            resistField.map((r,i) => 
+            <div key={i}>Reps: <input type="number" min="0" value={r.reps} name={`reps${i}`} onChange={event => handleResist(i, event)}/> Weight: <input type="text" value={r.resistance}  name={`resistance${i}`} onChange={event =>handleResist(i, event)}/> {+i > 0 && <span onClick={()=>removeResistField(i)}>-</span>}{+i === resistField.length -1 && <span onClick={addResistField}>+</span>}</div>)
+            }
+            {type === "time" && 
+            durationField.map((r,i) => 
+            <div key={i}>Minutes: <input type="number" min="0" value={r.minutes} name={`minutes${i}`} onChange={event => handleDuration(i, event)}/> Seconds: <input type="text" value={r.seconds}  name={`seconds${i}`} onChange={event =>handleDuration(i, event)}/> 
+            {i > 0 && <span onClick={()=>removeDurationField(i)}>-</span>}
+            {+i === durationField.length - 1 && <span onClick={addDurationField}>+</span>}</div>)
+            }
         </div>
     )
 }
