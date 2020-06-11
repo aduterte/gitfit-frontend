@@ -5,8 +5,8 @@ export const userAtom = atom({
     default: {}
 })
 
-export const userWorkouts = atom({
-    key: "user-workouts",
+export const userRoutines = atom({
+    key: "user-routines",
     default: []
 })
 
@@ -23,4 +23,9 @@ export const searchExe = atom({
 export const selectedExeForWorkout = atom({
     key: "selected-exercise-for-workout",
     default: []
+})
+
+export const userPosts = atom({
+    key: "user-posts",
+    default: null
 })

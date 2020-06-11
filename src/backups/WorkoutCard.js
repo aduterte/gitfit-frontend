@@ -1,9 +1,9 @@
 import React, {useState} from "react"
 import { userAtom, exeAtom, userWorkouts} from "../Atoms/Atoms"
 import { useRecoilValue, useRecoilState } from "recoil"
-import Weights from "../Components/SetsWeight"
-import Resistance from "../Components/SetsResist"
-import Duration from "../Components/SetsDuration"
+import Weights from "./SetsWeight"
+import Resistance from "./SetsResist"
+import Duration from "./SetsDuration"
 import { URL } from "../constants/index"
 
 // import {willMount} from "../hooks/willMount"

@@ -1,36 +1,38 @@
 import React, {useEffect} from 'react';
-import { userAtom, exeAtom, userWorkouts } from "./Atoms/Atoms"
+import { userAtom, exeAtom, userRoutines } from "./Atoms/Atoms"
 import { useSetRecoilState, useRecoilState } from "recoil"
 import './App.css'
-import {URL} from "./constants/index"
+import {API} from "./constants/index"
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 import Nav from "./Containers/NavContainer"
 import CreateWorkoutContainer from "./Containers/CreateWorkoutContainer"
 import Footer from "./Components/Footer"
 import ProfileContainer from "./Containers/ProfileContainer"
 import LoginContainer from './Containers/LoginContainer';
+import RoutineContainer from './Containers/RoutineContainer';
 
 function App() {
 
   const [user, setUser] = useRecoilState (userAtom),
     setExercises = useSetRecoilState (exeAtom),
-    setWorkouts = useSetRecoilState(userWorkouts)
+    setRoutines = useSetRecoilState(userRoutines)
 
   useEffect(()=>{
     if(localStorage.getItem("token")) {
-      fetch(`${URL}/login`, {
+      fetch(`${API}/login`, {
         headers: {"Authenticate": localStorage.token}
       })
       .then(resp => resp.json())
       .then(user =>{ 
+        
         setUser(user)
-        setWorkouts(user.workouts)
+        setRoutines(user.routines)
       })
     }
-  },[setUser, setWorkouts])
+  },[setUser, setRoutines])
 
   useEffect(()=>{
-    fetch(`${URL}/exercises`)
+    fetch(`${API}/exercises`)
     .then(resp => resp.json())
     .then(data => setExercises(data))
   },[setExercises])
@@ -41,10 +43,13 @@ function App() {
         <Nav />
         <Switch>
           <Route path="/create-workout">
-            {user.name ? <CreateWorkoutContainer/> : <Redirect to="/login"/>}
+          <CreateWorkoutContainer/> 
+            {/* {user.name ? <CreateWorkoutContainer/> : <Redirect to="/login"/>} */}
           </Route>
-          
-          <Route path="/profile">
+          <Route path="/routines">
+            {user.name ? <RoutineContainer /> : <Redirect to="/login"/>}
+          </Route>
+          <Route path="/profile" >
             {user.name ? <ProfileContainer/>: <Redirect to="/login"/>}
           </Route>
           <Route path="/login">

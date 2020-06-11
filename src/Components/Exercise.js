@@ -1,6 +1,7 @@
 import React, {useState} from "react"
 import {selectedExeForWorkout} from "../Atoms/Atoms"
 import { useRecoilState } from "recoil"
+import ExerciseModal from "../Components/ExerciseModal"
 
 export default function Exercise(props){
 
@@ -9,9 +10,13 @@ export default function Exercise(props){
         [showModal, setShowModal] = useState(false)
 
     function handleOnClick(){
-setSelected([...selected, {name: props.exe.name, sets:[], type_name: "", exercise_id: props.exe.id}])    
+        setSelected([...selected, {name: props.exe.name, sets:[], type_name: "", exercise_id: props.exe.id}])    
     }
-    
+
+    function toggleModal(){
+        setShowModal(!showModal)
+    }
+    // console.log(props.exe)
     return(
         <div className="exercise-card">
             <div className="exercise-card-background-image" style={style}>
@@ -42,14 +47,7 @@ setSelected([...selected, {name: props.exe.name, sets:[], type_name: "", exercis
                 </div>
             </div>
             <div className="exercise-modal" style={showModal ? {display: "flex"} :{ display: "none"}}>
-                <div className="exercise-modal-content">
-                    <div onClick={()=>setShowModal(!showModal)}>
-                    CLOSE
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
+                {showModal && <ExerciseModal func={toggleModal} exe={props.exe}/>}
             </div>
         </div>
     )

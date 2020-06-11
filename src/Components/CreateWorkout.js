@@ -2,7 +2,7 @@ import React,{useState} from "react"
 import { selectedExeForWorkout, userAtom } from "../Atoms/Atoms"
 import { useRecoilState, useRecoilValue } from "recoil"
 import CreateWorkoutInput from "../Components/CreateWorkoutForm"
-import {URL} from "../constants/index"
+import {API} from "../constants/index"
 
 export default function CreateWorkout(){
     const [selected, setSelected] = useRecoilState(selectedExeForWorkout),
@@ -28,7 +28,7 @@ export default function CreateWorkout(){
             exercises: selected
         }
         // setExercise({})
-        fetch(`${URL}/routines`, {
+        fetch(`${API}/routines`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(obj)
@@ -42,7 +42,7 @@ export default function CreateWorkout(){
                     type_name: exe.type_name,
                     name: exe.name
                 }
-                fetch(`${URL}/workouts`, {
+                fetch(`${API}/workouts`, {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(workout)
@@ -54,16 +54,32 @@ export default function CreateWorkout(){
         })
     }
     return (
-        <div>
+        <div className="routine-form">
             <form onSubmit={handleSubmit}>
-                <input name="name" value={routineName} onChange={handleRoutineName}/>
-            {selected.map((e, i) => 
-                <div key={`list-${i}`}>
-                {e.name} <span onClick={() => handleRemove(i)}> x </span>
-                <CreateWorkoutInput index={i}/>
+                <div>
+                    {selected.length > 0 && <input className="routine-form-name-input" name="name" value={routineName} onChange={handleRoutineName} placeholder="Enter Routine Name" required/>}
                 </div>
-            )}
-            <input type="submit" value="Create Routine"/>
+                <div className="routine-form-workout-container">
+                    {selected.map((e, i) => 
+                    <div className="routine-form-each-ex" key={`list-${i}`}>
+                        <div className="routine-form-ex">
+                            <div className="routine-form-ex-name">
+                                {e.name} 
+                            </div> 
+                            <div onClick={() => handleRemove(i)} className="remove-button"> 
+                            &#10006; 
+                            </div>
+                        </div>
+                        <CreateWorkoutInput index={i}/>
+                    </div>
+                    )}
+                </div>
+                <div>
+                    <br/>
+                    {selected.length < 1 ? <div>Select an Exercise to Create a Routine</div>:
+                    <input className="routine-form-submit-button" type="submit" value="Create Routine"/>
+                    }
+                </div>
             </form> 
         </div>
     )

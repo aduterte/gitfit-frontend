@@ -22,7 +22,7 @@ export default function CreateWorkoutContainer(){
     return (
         <div id="create-workout-container">
             <div className="create-workout-column">
-                <h1>Create a Workout</h1>
+                <h1>Create a Routine</h1>
                 <CreateWorkout />
             </div>
             <div className="create-workout-right">
