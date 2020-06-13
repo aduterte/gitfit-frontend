@@ -6,6 +6,7 @@ import CreatePost from "../Components/CreatePost"
 import { API } from "../constants/index"
 import Post from "../Components/Post"
 import EditProfile from "../Components/EditProfile"
+import Dashboard from "../Components/Dashboard"
 
 export default function ProfileContainer(props){
 
@@ -19,6 +20,7 @@ export default function ProfileContainer(props){
         fetch(`${API}/users/${user.id}`)
         .then(resp => resp.json())
         .then(data => {
+            
             if(data.posts.length > 0){
             const sorted = [...data.posts.sort((a,b) => {
                 if(a.created_at <b.created_at){return 1 }
@@ -58,7 +60,7 @@ export default function ProfileContainer(props){
             <div id="profile-info">
                 <div className="profile-wallpaper">
                     <div className="profile-picture" style={{backgroundImage: `url(${user.avatar})`}}/>
-                    <h2>{user.name.split(" ")[0]}<br/>{user.name.split(" ")[1] !== undefined ? null : user.name.split(" ")[1]}</h2>
+                    <h2>{user.name.split(" ")[0]}<br/>{user.name.split(" ")[1] === undefined ? null : user.name.split(" ")[1]}</h2>
                 </div>
                 <div className="profile-info-bottom">
                     <div className="profile-latest-activity">
@@ -89,7 +91,20 @@ export default function ProfileContainer(props){
             </div>
             <div id="profile-main-container">
                 {!!posts && <div id="profile-main">
-                    {newPost &&
+                
+                    <div className="post-selector">My Posts</div>
+                    <div>
+                        {posts && posts.map((post, index) => <Post key={post.id} post={post} index={index}/>)}
+                    </div>
+                </div>}
+                {editProfile &&
+                <div ref={profile} className="profile-edit">
+                    <EditProfile />
+                </div>    
+                }
+                {/* <Dashboard /> */}
+            </div>
+            {newPost &&
                     <div className="post-modal">
                         {/* {begin create post modal} */}
                         <div >
@@ -100,16 +115,6 @@ export default function ProfileContainer(props){
                     {/* {end create post modal} */}
                     </div>
                     }
-                    <div>
-                        {posts && posts.map(post => <Post key={post.id} post={post}/>)}
-                    </div>
-                </div>}
-                {editProfile &&
-                <div ref={profile} className="profile-edit">
-                    <EditProfile />
-                </div>    
-                }
-            </div>
         </div>
     )
 }

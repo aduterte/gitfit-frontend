@@ -48,8 +48,13 @@ export default function CreatePost(props){
             body: JSON.stringify(obj)
         }).then(resp => resp.json())
         .then(post => {
+            if(!!posts){
             setPosts([post, ...posts])
             props.func()
+            } else {
+                setPosts([post])
+                props.func()
+            }
         })
     }
     return (

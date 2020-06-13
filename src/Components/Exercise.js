@@ -20,35 +20,37 @@ export default function Exercise(props){
     return(
         <div className="exercise-card">
             <div className="exercise-card-background-image" style={style}>
-
-            </div>
-            <div className="exercise-card-name">
-                {props.exe.name}
-               
-            </div>
-            <div className="exercise-card-body">
-                <h4>Body Parts</h4>
-                <p>{props.exe.body_part.join(", ")}</p>
-            </div>
-            <div className="exercise-card-equipment">
-                <h4>Equipment</h4>
-                <p>{props.exe.equipment.join(", ")}</p>
-            </div>
-            <div className="exercise-card-difficulty">
-                <h4>Difficulty</h4>
-                <p>{props.exe.difficulty}</p>
-            </div>
-            <div className="exercise-card-bottom">
-                <div onClick={()=>setShowModal(!showModal)}>
-                    view details
+                <div className="exercise-card-content-container">
+                    <div className="exercise-card-name">
+                        {props.exe.name}
+                    
+                    </div>
+                    <div className="exercise-card-body">
+                        <h4>Body Parts</h4>
+                        <p>{props.exe.body_part.join(", ")}</p>
+                    </div>
+                    <div className="exercise-card-equipment">
+                        <h4>Equipment</h4>
+                        <p>{props.exe.equipment.join(", ")}</p>
+                    </div>
+                    <div className="exercise-card-difficulty">
+                        <h4>Difficulty</h4>
+                        <p>{props.exe.difficulty}</p>
+                    </div>
+                    <div className="exercise-card-bottom">
+                        <div onClick={()=>setShowModal(!showModal)}>
+                            view details
+                        </div>
+                        <div onClick={handleOnClick}> 
+                            add to routine
+                        </div>
+                        
                 </div>
-                <div onClick={handleOnClick}> 
-                    add to routine
-                </div>
             </div>
-            <div className="exercise-modal" style={showModal ? {display: "flex"} :{ display: "none"}}>
-                {showModal && <ExerciseModal func={toggleModal} exe={props.exe}/>}
-            </div>
+        </div>  
+        <div className="exercise-modal" style={showModal ? {display: "flex"} :{ display: "none"}}>
+                            {showModal && <ExerciseModal func={toggleModal} exe={props.exe}/>}
+                        </div>
         </div>
     )
 }

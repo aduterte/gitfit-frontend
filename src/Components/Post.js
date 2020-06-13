@@ -9,13 +9,7 @@ export default function Post(props){
         [isEdit, setIsEdit] = useState(false),
         [editContent, setEditContent] = useState(content),
         [posts, setPosts] = useRecoilState(userPosts)
-    //     uRoutines = useRecoilValue(userRoutines),
-    //     [routine, setRoutine] = useState(null)
     
-    // useEffect(()=>{
-    //     const test = uRoutines.find(r => r.id === routine_id)
-    //     setRoutine(test)
-    // },[uRoutines,routine_id])
     
     const setParse = (set) => {
         let split = JSON.stringify(set)
@@ -35,7 +29,7 @@ export default function Post(props){
     }
 
     const editPost = () => {
-        
+        setIsEdit(!isEdit)
     }
     const deletePost = () => {
         fetch(`${API}/posts/${id}`, {
@@ -44,6 +38,27 @@ export default function Post(props){
 
         const updatedPosts = posts.filter(p => p.id !== id) 
         setPosts(updatedPosts)
+    }
+
+    const handleEdit = (e) => {
+        setEditContent(e.target.value)
+    }
+
+    const submitEdit =(e)=>{
+        e.preventDefault()
+        const obj = {content: editContent}
+        fetch(`${API}/posts/${id}`, {
+            method: "PATCH",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(obj)
+        }).then(resp => resp.json())
+        .then(data => {
+            const array = [...posts]
+            array.splice(props.index, 1, data)
+            setPosts(array)
+            setIsEdit(!isEdit)
+        })
+        e.target.reset()
     }
     return(
         <div className="post">
@@ -64,7 +79,12 @@ export default function Post(props){
                 <div className="post-header-right">
                     
                     <div className="post-header-hamburger">&#9776;
-                    <div onClick={deletePost} className="post-edit-menu"> delete post</div>
+                    <div className="post-edit-menu">
+                        <div onClick={editPost} className="post-edit-menu-edit"> edit post</div>
+                        <div onClick={deletePost} className="post-edit-menu-delete"> delete post</div>
+
+                    </div>
+                    
                     </div>
                 </div>
             </div>
@@ -95,8 +115,12 @@ export default function Post(props){
                 </div>
                 }
                 <div className="post-content">
+                    {!isEdit ? content : 
+                    <form className="post-edit-form" onSubmit={submitEdit}>
+                        <textarea className="post-edit-content" onChange={handleEdit} name="content" value={editContent}/>    
+                        <button className="post-edit-form-button">edit</button>
+                    </form>}
                     
-                    {content}
                     
                 </div>
                 <div>

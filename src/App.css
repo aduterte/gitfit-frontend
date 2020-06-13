@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
 html body {
   height: 100%;
   /* background-color: rgb(96, 96, 96);
@@ -106,9 +108,9 @@ a:visited {
 
 .exercise-card {
   width: 225px;
-  height: 400px;
+  min-height: 400px;
   /* background-color: rgb(47, 67, 90); */
-  background-color: rgb(34, 34, 34);
+  /* background-color: rgb(34, 34, 34); */
 
   color: white;
   margin: 10px;
@@ -117,10 +119,11 @@ a:visited {
   text-align: center;
   flex-direction: column;
   /* align-items: center; */
-  justify-content: space-between;
-  display:flex;
-  box-shadow: 5px 10px 8px #888888;
-  align-self: stretch;
+  /* justify-content: space-between; */
+  /* display:flex; */
+  box-shadow: 5px 5px 2px #888888;
+  /* align-self: stretch; */
+  
 }
 
 .exercise-card-bottom {
@@ -160,19 +163,28 @@ a:visited {
   font-weight: bold; */
 }
 
-
+.exercise-card-content-container {
+  background-color: rgba(0, 0, 0, 0.555);
+  min-height: 400px;
+  z-index: 1; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: space-between;
+}
 
 .exercise-card-background-image {
-  height: 200px;
+  /* max-height: 600px; */
   margin: 0px;
   background-position: center; 
   background-size: cover;
   background-repeat: no-repeat;
-  
+  /* position: relative; */
+  /* z-index: -1; */
 }
 
 .exercise-card-name {
-  margin-top: 10px;
+  /* margin-top: 10px; */
   font-size: 20px;
   font-weight: bold;
 }
@@ -294,9 +306,7 @@ border: none;
   /* align-items: center; */
   
 }
-.exercise-modal-main div img {
-max-height:483px;
-}
+
 
 .exercise-modal-header {
   background-color: rgb(27, 36, 60);
@@ -325,6 +335,27 @@ max-height:483px;
   margin-top: -20px;
   overflow: auto;
 }
+
+.exercise-modal-image-container {
+  min-width: 500px;
+  min-height: 500px;
+  max-height: 500px;
+  background-color: rgb(27, 27, 27);
+  display:flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.exercise-modal-image {
+  /* max-height:100%; */
+  height: auto;
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+ 
+  }
 
 .post {
   width: 800px;
@@ -380,29 +411,72 @@ max-height:483px;
 }
 
 .post-edit-menu {
-position: absolute;
+  position: relative;
   background-color: #f1f1f1;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
-  margin:25px 0px 0px -70px;
-  height: 30px;
+  margin:25px 0px 0px -160px;
+  height: 60px;
   display: none;
   justify-content: center;
   align-items: center;
   font-size: .7em;
 }
-.post-edit-menu:hover {
+.post-edit-menu-delete:hover {
   background-color: rgb(79, 79, 79);
+}
+
+.post-edit-menu-edit:hover {
+  background-color: rgb(79, 79, 79);
+}
+.post-edit-menu-edit {
+  display:flex;
+  justify-content: center;
+  min-width: 160px;
+  height: 30px;
+  align-items: center;
+}
+.post-edit-menu-delete {
+  display:flex;
+  justify-content: center;
+  min-width: 160px;
+  height: 30px;
+  align-items: center;
+  border-top: .1em solid rgba(110, 110, 110, 0.335);
 }
 .post-header-hamburger:hover .post-edit-menu {
   display: flex;
+  flex-direction: column;
   animation: edit-menu .4s;
 }
 
 @keyframes edit-menu {
   0% {width: 0px; height: 0px;}
-  100% {width: 160px; height:30px;}
+  100% {width: 160px; height:60px;}
+}
+
+.post-edit-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 40px;
+}
+.post-edit-form-button{
+ width: 100px;
+ margin: 10px 0px 10px 0px;
+}
+.post-edit-content {
+  width: 715px;
+  resize: none;
+  height: 100px;
+  font-size: 1.3em;
+  border: .01em solid rgb(219, 219, 219);
+}
+.post-selector {
+  margin: 10px 0px 10px 12px;
+  font-size: 1.5em;
+  color: rgb(97, 97, 97);
 }
 .fas {
   color: grey;
@@ -612,6 +686,7 @@ border-radius: 4px;
   width: 100px;
   background-size: cover;
   border-radius: 50%;
+  border: .2em solid rgb(236, 236, 236);
   /* position: fixed; */
   /* margin-top: 50px; */
 
@@ -748,6 +823,15 @@ border-radius: 4px;
   font-size: 1.2em;
   margin-bottom: 10px;
 }
+
+.material-icons {
+  color: grey;
+  cursor: pointer;
+}
+
+.material-icons:hover {
+  color: rgb(128, 128, 128);
+}
 .remove-button {
   /* display: inline-block; */
   width: 15px;
@@ -756,10 +840,10 @@ border-radius: 4px;
   color: rgb(113, 113, 113);
   justify-content: center;
   display:flex;
-  font-size: 18px;
+  font-size: 1em;
   align-items: center;
   border-radius: 15px;
-  font-weight: bolder;
+  /* font-weight: bolder; */
   border: .18em solid;
   margin-right: 10px;
   cursor: pointer;
@@ -1020,4 +1104,16 @@ border-radius: 4px;
   0% {width: 305px;}
   50% {width: 400px;}
   100% {width: 305px;}
+}
+
+.dashboard {
+  width:100%;
+  /* margin-right: 100px; */
+  background-color: rgb(77, 65, 65);
+  font-size: 2em;
+}
+
+.line-chart {
+  width: 450px;
+  background: white;
 }

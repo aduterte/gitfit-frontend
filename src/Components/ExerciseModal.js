@@ -24,8 +24,10 @@ export default function ExerciseModal(props){
         <div className="exercise-modal-content">
             
             <div className="exercise-modal-main" >
-                <div>
+                <div className="exercise-modal-image-container" >
+                    <div className="exercise-modal-image">
                     <img src={images[currentImage]} alt=""/>
+                    </div>
                 </div>
                 <div style={{backgroundColor: "white"}}>
                     <div className="exercise-modal-header">

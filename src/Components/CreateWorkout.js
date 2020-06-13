@@ -66,8 +66,13 @@ export default function CreateWorkout(){
                             <div className="routine-form-ex-name">
                                 {e.name} 
                             </div> 
-                            <div onClick={() => handleRemove(i)} className="remove-button"> 
-                            &#10006; 
+                            <div style={{display: "flex", justifyContent: "flex-start", alignContent: "center"}}>
+                                <div onClick={() => handleRemove(i)} className="remove-button"> 
+                                &#10006; 
+                                </div>
+                                <div className="duplicate-button material-icons" onClick={()=> setSelected([...selected, e])}>
+                                &#xe14d;
+                                </div>
                             </div>
                         </div>
                         <CreateWorkoutInput index={i}/>
