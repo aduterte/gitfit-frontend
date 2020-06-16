@@ -1,5 +1,5 @@
 import React,{useState} from "react"
-import { selectedExeForWorkout, userAtom } from "../Atoms/Atoms"
+import { selectedExeForWorkout, userAtom, userRoutines } from "../Atoms/Atoms"
 import { useRecoilState, useRecoilValue } from "recoil"
 import CreateWorkoutInput from "../Components/CreateWorkoutForm"
 import {API} from "../constants/index"
@@ -7,7 +7,10 @@ import {API} from "../constants/index"
 export default function CreateWorkout(){
     const [selected, setSelected] = useRecoilState(selectedExeForWorkout),
         [routineName, setRoutineName] = useState(""),
-        user = useRecoilValue(userAtom)
+        user = useRecoilValue(userAtom),
+        [myRoutines, setMyRoutines] = useRecoilState(userRoutines),
+        [tempRoutine, setTempRoutine] = useState({}),
+        [tempWorkouts, setTempWorkout] = useState([])
 
     const handleRemove = (i) => {
         const exercises = [...selected]
@@ -21,7 +24,7 @@ export default function CreateWorkout(){
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(user.id, selected, routineName)
+        // console.log(user.id, selected, routineName)
         const obj = {
             user_id: user.id,
             name: routineName,
@@ -32,8 +35,10 @@ export default function CreateWorkout(){
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(obj)
-        }).then(resp => resp.json())
+        })
+        .then(resp => resp.json())
         .then(routine => {
+            
             selected.forEach(exe => {
                 let workout = {
                     routine_id: routine.id,
@@ -46,11 +51,25 @@ export default function CreateWorkout(){
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(workout)
-            }).then(setSelected([]))
-            // selected.forEach()
-        })
-  
-        
+                })
+                .then(resp => resp.json())
+                .then(workout => {
+                    // console.log(workout)
+                    // debugger
+                    // workArray = [...workArray, workout]
+                    setTempWorkout([...tempWorkouts, workout])
+
+                
+                
+                })
+            }) // end of for each
+            const array = [...myRoutines, {...routine, workouts: tempWorkouts}]
+            // const array = [...myRoutines, {...routine, workouts: workArray}]
+            console.log(array)
+            // array = [...myRoutines, {...tempRoutine, weights: tempWorkouts}]
+            
+            setMyRoutines(array)
+            // console.log(tempRoutine)
         })
     }
     return (

@@ -29,3 +29,13 @@ export const userPosts = atom({
     key: "user-posts",
     default: null
 })
+
+export const userFollowing = atom({
+    key: "user-following",
+    default: null
+})
+
+export const userFollowers = atom({
+    key: "user-followers",
+    default: null
+})

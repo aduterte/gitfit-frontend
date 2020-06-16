@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { userAtom, exeAtom, userRoutines } from "./Atoms/Atoms"
+import { userAtom, exeAtom, userRoutines, userFollowing, userFollowers } from "./Atoms/Atoms"
 import { useSetRecoilState, useRecoilState } from "recoil"
 import './App.css'
 import {API} from "./constants/index"
@@ -10,12 +10,15 @@ import Footer from "./Components/Footer"
 import ProfileContainer from "./Containers/ProfileContainer"
 import LoginContainer from './Containers/LoginContainer';
 import RoutineContainer from './Containers/RoutineContainer';
+import ProfileShowContainer from './Containers/ProfileShowContainer';
 
 function App() {
 
   const [user, setUser] = useRecoilState (userAtom),
     setExercises = useSetRecoilState (exeAtom),
-    setRoutines = useSetRecoilState(userRoutines)
+    setRoutines = useSetRecoilState(userRoutines),
+    setFollowing = useSetRecoilState(userFollowing),
+    setFollowers = useSetRecoilState(userFollowers)
 
   useEffect(()=>{
     if(localStorage.getItem("token")) {
@@ -27,6 +30,9 @@ function App() {
         
         setUser(user)
         setRoutines(user.routines)
+        setFollowers(user.followers)
+        setFollowing(user.followed)
+        
       })
     }
   },[setUser, setRoutines])
@@ -36,7 +42,7 @@ function App() {
     .then(resp => resp.json())
     .then(data => setExercises(data))
   },[setExercises])
-
+  
   return (
     <Router>
       <div className="App">
@@ -49,9 +55,16 @@ function App() {
           <Route path="/routines">
             {user.name ? <RoutineContainer /> : <Redirect to="/login"/>}
           </Route>
-          <Route path="/profile" >
+          <Route exact path="/profile" >
             {user.name ? <ProfileContainer/>: <Redirect to="/login"/>}
           </Route>
+          <Route exact path="/profile/:id" render={
+            (routerProps) => { 
+              let id = routerProps.match.params.id
+              return <ProfileShowContainer user={id}/>
+            }
+          }
+          />
           <Route path="/login">
             {!user.name ? <LoginContainer/>: <Redirect to="/profile"/>}
           </Route>

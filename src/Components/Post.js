@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
-import { userPosts, userRoutines } from "../Atoms/Atoms"
-import {useRecoilState} from "recoil"
+import { userPosts, userAtom } from "../Atoms/Atoms"
+import {useRecoilState, useRecoilValue} from "recoil"
 import { API } from "../constants/index"
 import * as timeago from "timeago.js"
 
@@ -8,7 +8,9 @@ export default function Post(props){
     const {content, picture, created_at, routine, id, user} = props.post,
         [isEdit, setIsEdit] = useState(false),
         [editContent, setEditContent] = useState(content),
-        [posts, setPosts] = useRecoilState(userPosts)
+        [posts, setPosts] = useRecoilState(userPosts),
+        currentUser = useRecoilValue(userAtom),
+        [likes, setLikes] = useState(props.post.likes)
     
     
     const setParse = (set) => {
@@ -60,6 +62,27 @@ export default function Post(props){
         })
         e.target.reset()
     }
+
+    const addLike = () => {
+        fetch(`${API}/likes`, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({post_id: id, user_id: user.id})
+        }).then(resp => resp.json())
+        .then(data => {
+            const a = [...likes, data]
+            setLikes(a)
+        })
+    }
+    const likeAvatars = () => {
+        if(likes.length > 3){
+            const a = likes.slice(0, 3)
+            console.log(a)
+            return a
+        } else {
+            return likes
+        }
+    }
     return(
         <div className="post">
             <div className="post-header">
@@ -77,7 +100,7 @@ export default function Post(props){
                     </div>
                 </div>
                 <div className="post-header-right">
-                    
+                    {+user.id === +currentUser.id &&
                     <div className="post-header-hamburger">&#9776;
                     <div className="post-edit-menu">
                         <div onClick={editPost} className="post-edit-menu-edit"> edit post</div>
@@ -86,6 +109,7 @@ export default function Post(props){
                     </div>
                     
                     </div>
+                    }
                 </div>
             </div>
             <div>   
@@ -126,7 +150,21 @@ export default function Post(props){
                 <div>
                     {picture && <img className="post-image" src={picture} alt="post image"/>}
                 </div>
-            
+                <div className="post-bottom-container">
+                    <div className="post-like-bar">
+                        <div className="post-like-bar-left">
+                            <div className="post-like-avatar-wrapper">
+                                {likes && likeAvatars().map((like, index)=><div className="post-like-avatar" key={index} style={{backgroundImage: `url(${like.user.avatar})`}}/>)}
+                            </div>
+                            <div className="post-like-counter">
+                        {!!likes ? `${likes.length} Likes`: "Be the first to like"} and comment counter</div>
+                        </div>
+                        <div className="post-like-bar-right">
+                            <div className="post-buttons" onClick={addLike}><span className="glyphicon glyphicon-thumbs-up"></span></div>
+                            <div className="post-buttons material-icons">&#xe0b9;</div>
+                        </div>
+                    </div>
+                </div>        
             
             </div> 
         </div>

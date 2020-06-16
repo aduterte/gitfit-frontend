@@ -16,36 +16,7 @@ export default function EditProfile(){
             trainer: user.trainer,
             age: user.age})
 
-    const [weightInput, setWeightInput] = useState({weight: 0, type: "lbs"})
-        
-    const handleWeightForm = (e) => {
-        const {name, value} = e.target
-        setWeightInput({...weightInput, [name]: value})
 
-    }
-
-    const logWeight = (e) => {
-        e.preventDefault()
-        const obj = {user_id: user.id, lbs: 0, kg: 0}
-        if(weightInput.type ==="lbs"){ 
-            obj.lbs = weightInput.weight
-            obj.kg = obj.lbs / 2.205
-        } else if (weightInput.type === "kg") {
-            obj.kg = weightInput.weight
-            obj.lbs = obj.kg * 2.205
-        }
-        e.target.reset()
-        setWeightInput({...weightInput, type: "lbs"})
-        console.log(obj)
-
-        fetch(`${API}/weights`, {
-            method: "POST",
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify(obj)
-        }).then(resp => resp.json())
-        .then(data => console.log(data))
-
-    }
 
     const handleOnChange = (e) => {
         const {name, value} = e.target
@@ -105,18 +76,7 @@ export default function EditProfile(){
             </div>
             <button>Submit</button>
             </form>
-            {/* start of input form for weight */}
-            <div>
-                delete me later
-                <form onSubmit={logWeight}>
-                    <input onChange={handleWeightForm} type="num" name="weight" placeholder="Enter Weight"/>
-                    <select onChange={handleWeightForm} name="type" value={weightInput.type} required>
-                        <option name="type" value="lbs">lbs</option>
-                        <option name="type" value="kg">kg</option>
-                    </select>
-                </form>
-            </div>
-            {/* end of input form for weight */}
+           
         </div>
     )
 }

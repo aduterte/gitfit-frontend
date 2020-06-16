@@ -9,6 +9,7 @@ export default function CreateWorkoutForm(props){
         [resistField, setResistField] = useState([{ reps: 0, resistance: ""}]),
         [durationField, setDurationField] = useState([{ minutes: 0, seconds: 0 }]),
         [selected, setSelected] = useRecoilState(selectedExeForWorkout)
+      
 
   
     const handleTypeChange = (e) => {

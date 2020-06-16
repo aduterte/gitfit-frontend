@@ -31,7 +31,7 @@ export default function ProfileContainer(props){
             // console.log(sorted)
             setPosts(sorted)
             }
-            // console.log(data)
+            console.log(data)
         })
     },[setPosts])
 
@@ -102,7 +102,7 @@ export default function ProfileContainer(props){
                     <EditProfile />
                 </div>    
                 }
-                {/* <Dashboard /> */}
+                <Dashboard />
             </div>
             {newPost &&
                     <div className="post-modal">

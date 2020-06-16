@@ -1,5 +1,5 @@
 import React, {useState, createRef} from "react"
-import { userAtom, userRoutines } from "../Atoms/Atoms"
+import { userAtom, userRoutines, userFollowers, userFollowing } from "../Atoms/Atoms"
 import { useSetRecoilState } from "recoil"
 import { API } from "../constants/index"
 
@@ -7,6 +7,8 @@ export default function LoginContainer(){
 
     const setUser = useSetRecoilState(userAtom),
         setRoutines = useSetRecoilState(userRoutines),
+        setFollowing = useSetRecoilState(userFollowing),
+        setFollowers = useSetRecoilState(userFollowers),
         [input, setInput] = useState({name: "", password: "", email: "", passwordConfirm: ""}),
         [isLogin, setIsLogin] = useState(true),
         loginForm = createRef(),
@@ -26,10 +28,14 @@ export default function LoginContainer(){
             body: JSON.stringify({email: input.email, password: input.password})
         }).then(resp => resp.json())
         .then(data => {
-            console.log(data.user.routines, data.token)
+           
             localStorage.setItem("token", data.token)
             setUser(data.user)
             setRoutines(data.user.routines)
+            setFollowers(data.user.followers)
+            setFollowing(data.user.followed)
+            
+            console.log(data.user)
         })
         } else if (!isLogin){
             fetch(`${API}/users`, {
@@ -40,6 +46,7 @@ export default function LoginContainer(){
             .then(data => {
                 localStorage.setItem("token", data.token)
                 setUser(data.user)
+                console.log(data.user)
             })
         }
     }
