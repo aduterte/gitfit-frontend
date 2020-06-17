@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { userAtom, exeAtom, userRoutines, userFollowing, userFollowers } from "./Atoms/Atoms"
+import { userAtom, exeAtom, userRoutines, userFollowing, userFollowers, userAchievements } from "./Atoms/Atoms"
 import { useSetRecoilState, useRecoilState } from "recoil"
 import './App.css'
 import {API} from "./constants/index"
@@ -11,6 +11,7 @@ import ProfileContainer from "./Containers/ProfileContainer"
 import LoginContainer from './Containers/LoginContainer';
 import RoutineContainer from './Containers/RoutineContainer';
 import ProfileShowContainer from './Containers/ProfileShowContainer';
+import Achievements from "./Components/Achievement"
 
 function App() {
 
@@ -18,7 +19,8 @@ function App() {
     setExercises = useSetRecoilState (exeAtom),
     setRoutines = useSetRecoilState(userRoutines),
     setFollowing = useSetRecoilState(userFollowing),
-    setFollowers = useSetRecoilState(userFollowers)
+    setFollowers = useSetRecoilState(userFollowers),
+    setAchievements = useSetRecoilState(userAchievements)
 
   useEffect(()=>{
     if(localStorage.getItem("token")) {
@@ -32,6 +34,7 @@ function App() {
         setRoutines(user.routines)
         setFollowers(user.followers)
         setFollowing(user.followed)
+        setAchievements(user.achievements)
         
       })
     }
@@ -46,6 +49,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Achievements/>
         <Nav />
         <Switch>
           <Route path="/create-workout">

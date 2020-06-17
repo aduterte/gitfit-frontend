@@ -39,3 +39,14 @@ export const userFollowers = atom({
     key: "user-followers",
     default: null
 })
+
+export const sessionAchievements = atom({
+    key: "session-achievements",
+    default: []
+})
+
+export const userAchievements = atom({
+    key: "user-achievements",
+    default: []
+})
+

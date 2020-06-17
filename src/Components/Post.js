@@ -10,9 +10,15 @@ export default function Post(props){
         [editContent, setEditContent] = useState(content),
         [posts, setPosts] = useRecoilState(userPosts),
         currentUser = useRecoilValue(userAtom),
-        [likes, setLikes] = useState(props.post.likes)
+        [likes, setLikes] = useState(null),
+        [commentForm, setCommentForm] = useState(false),
+        [commentContent, setCommentContent] = useState(""),
+        [comments, setComments] = useState(props.post.comments)
     
-    
+    useEffect(()=>{
+        setLikes(props.post.likes)
+    },[setLikes])
+
     const setParse = (set) => {
         let split = JSON.stringify(set)
         .replace('{', "").replace('}',"")
@@ -67,22 +73,66 @@ export default function Post(props){
         fetch(`${API}/likes`, {
             method: "POST",
             headers: {"Content-Type":"application/json"},
-            body: JSON.stringify({post_id: id, user_id: user.id})
+            body: JSON.stringify({post_id: id, user_id: currentUser.id})
         }).then(resp => resp.json())
         .then(data => {
             const a = [...likes, data]
             setLikes(a)
+           
         })
     }
     const likeAvatars = () => {
         if(likes.length > 3){
             const a = likes.slice(0, 3)
-            console.log(a)
+           
             return a
         } else {
             return likes
         }
     }
+
+    const checkLike = () => {
+        if (!!likes){
+            // debugger
+            if(!!likes.find(like => like.user.id === currentUser.id)){
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+
+    const unLike = () => {
+        fetch(`${API}/unlike`, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({post_id: id, user_id: currentUser.id})
+        }).then(()=>{
+            const a = likes.filter(like => like.user.id !== currentUser.id)
+            setLikes(a)
+        })
+    }
+    
+    const handleComment = (e) => {
+        setCommentContent(e.target.value)
+    }
+
+    const commentSubmit = (e) => {
+        e.preventDefault()
+        fetch(`${API}/comments`, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({content: commentContent, post_id: id, user_id: currentUser.id})
+        }).then(resp => resp.json())
+        .then(data => {
+            
+            const a = [...comments, data]
+            setComments(a)
+            setCommentContent("")
+            setCommentForm(!commentForm)
+        })
+    }
+    
     return(
         <div className="post">
             <div className="post-header">
@@ -160,9 +210,34 @@ export default function Post(props){
                         {!!likes ? `${likes.length} Likes`: "Be the first to like"} and comment counter</div>
                         </div>
                         <div className="post-like-bar-right">
+                            {checkLike() ? 
+                            <div className="post-buttons" onClick={unLike}><span className="glyphicon glyphicon-thumbs-down"></span></div> :
                             <div className="post-buttons" onClick={addLike}><span className="glyphicon glyphicon-thumbs-up"></span></div>
-                            <div className="post-buttons material-icons">&#xe0b9;</div>
+                            }
+                            <div onClick={()=>setCommentForm(!commentForm)} className="post-buttons material-icons">&#xe0b9;</div>
                         </div>
+                    </div>
+                    <div className="post-comments-container">
+                        {commentForm && 
+                        <div className="post-comments-form">
+                            <div className="post-comment-avatar" style={{backgroundImage: `url(${currentUser.avatar})`}}/>
+                            <form onSubmit={commentSubmit}>
+                                <input className="post-comment-form-input" type="text" value={commentContent} onChange={handleComment} placeholder="Comment this post"/>
+                                <button className="post-comment-form-button">Add Comment</button>
+                            </form>
+                        </div>}
+                        {comments.map((com, i) => 
+                        <div className="post-comments-comment" key={`com-${i}`}>
+                            <div className="post-comment-avatar" style={{backgroundImage: `url(${com.user.avatar})`}}/>
+                            <div className="post-comment-content">
+                                <div className="post-comment-content-name">{com.user.name}</div>
+                                <div className="post-comment-content-content">{com.content}</div>
+                            </div>
+                            <div className="post-comment-time">{timeago.format(Date.parse(com.created_at))}</div>
+                        </div>)}
+                        
+                        
+
                     </div>
                 </div>        
             
