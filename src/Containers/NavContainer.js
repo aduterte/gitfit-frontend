@@ -1,13 +1,16 @@
-import React from "react"
-import { userAtom, userRoutines, userPosts } from "../Atoms/Atoms"
+import React, {useState, createRef} from "react"
+import { userAtom, userRoutines, userPosts, editProfileAtom } from "../Atoms/Atoms"
 import { useRecoilState, useSetRecoilState } from "recoil"
+import EditProfile from "../Components/EditProfile"
 import { Link } from "react-router-dom"
 
 export default function Nav(){
 
     const [user, setUser] = useRecoilState(userAtom),
         setPosts = useSetRecoilState(userPosts),
-        setRoutines = useSetRecoilState(userRoutines)
+        setRoutines = useSetRecoilState(userRoutines),
+        [editProfile, setEditProfile] = useRecoilState(editProfileAtom),
+        profile = createRef()
 
     const handleLogout = () => {
         setUser({})
@@ -16,6 +19,11 @@ export default function Nav(){
 
         
         localStorage.removeItem("token")
+    }
+
+    const toggleEdit = () => {
+        setEditProfile(!editProfile)
+        // profile.current.classList.toggle('is-toggle')
     }
 
     return (
@@ -32,7 +40,7 @@ export default function Nav(){
                         <Link to="/profile"><div className="nav-dropdown-button">Dashboard </div></Link>
                         <Link to="/create-workout"><div className="nav-dropdown-button">Create Routine</div></Link>
                         <Link to="/routines"><div className="nav-dropdown-button">My Routines</div></Link>
-                            <div className="nav-dropdown-button">Edit Profile</div>
+                            <div onClick={()=> setEditProfile(!editProfile)}className="nav-dropdown-button">Edit Profile</div>
                         </div>
                     </div>
                     <div className="gear fa">&#xf013;</div>
@@ -42,6 +50,11 @@ export default function Nav(){
                 {/* <Link to="/create-workout"><div className="nav-button"> Create Routine </div></Link> */}
                 {user.id ? <div className="nav-button" onClick={handleLogout}> Log out </div> : <Link to="/login"><div className="nav-button" > Log In </div></Link>}
             </div>
+            {editProfile &&
+                <div ref={profile} className="profile-edit">
+                    <EditProfile />
+                </div>    
+                }
         </div>
     )
 }

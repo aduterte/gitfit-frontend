@@ -1,5 +1,5 @@
 import React, {useState, createRef} from "react"
-import { userAtom, userRoutines, userFollowers, userFollowing } from "../Atoms/Atoms"
+import { userAtom, userRoutines, userFollowers, userFollowing, editProfileAtom } from "../Atoms/Atoms"
 import { useSetRecoilState } from "recoil"
 import { API } from "../constants/index"
 
@@ -9,6 +9,7 @@ export default function LoginContainer(){
         setRoutines = useSetRecoilState(userRoutines),
         setFollowing = useSetRecoilState(userFollowing),
         setFollowers = useSetRecoilState(userFollowers),
+        setEditProfile = useSetRecoilState(editProfileAtom),
         [input, setInput] = useState({name: "", password: "", email: "", passwordConfirm: ""}),
         [isLogin, setIsLogin] = useState(true),
         loginForm = createRef(),
@@ -35,7 +36,7 @@ export default function LoginContainer(){
             setFollowers(data.user.followers)
             setFollowing(data.user.followed)
             
-            console.log(data.user)
+            
         })
         } else if (!isLogin){
             fetch(`${API}/users`, {
@@ -46,7 +47,7 @@ export default function LoginContainer(){
             .then(data => {
                 localStorage.setItem("token", data.token)
                 setUser(data.user)
-                console.log(data.user)
+                setEditProfile(true)
             })
         }
     }
@@ -78,7 +79,7 @@ export default function LoginContainer(){
             
             <div className="login-image" ref={loginImage}>
                 
-                    <img src="/images/boglogogray.png" alt="logo"/>
+                    <img src="/images/blocklogogray.png" alt="logo"/>
                     <div>
                         <h2>{isLogin ? "Not" : "Already"} a member? </h2> Click <button onClick={handleToggle}>Here</button> to {isLogin ? "Sign up" : "Login"}
                     </div>

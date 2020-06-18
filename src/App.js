@@ -57,8 +57,8 @@ function App() {
         <Switch>
           <Route exact path="/" render={()=><MainPage/>}/> 
           <Route path="/create-workout">
-          <CreateWorkoutContainer/> 
-            {/* {user.name ? <CreateWorkoutContainer/> : <Redirect to="/login"/>} */}
+          {/* <CreateWorkoutContainer/>  */}
+            {user.name ? <CreateWorkoutContainer/> : <Redirect to="/profile"/>}
           </Route>
           <Route path="/routines">
             {user.name ? <RoutineContainer /> : <Redirect to="/login"/>}
@@ -66,18 +66,18 @@ function App() {
           <Route exact path="/profile" >
             {user.name ? <ProfileContainer/>: <Redirect to="/"/>}
           </Route>
-          <Route exact path="/profile/:id" render={
-            (routerProps) => { 
-              let id = routerProps.match.params.id
-              return <ProfileShowContainer user={id}/>
-            }
+          <Route exact path="/profile/:id" render={(routerProps) => 
+              <ProfileShowContainer user={routerProps.match.params.id}/>
+            
           }
           />
+       
+
           <Route path="/login">
             {!user.name ? <LoginContainer/>: <Redirect to="/profile"/>}
           </Route>
         </Switch>
-        {/* <Footer /> */}
+        
       </div>
     </Router>
   );

@@ -50,3 +50,7 @@ export const userAchievements = atom({
     default: []
 })
 
+export const editProfileAtom = atom({
+    key: "edit-profile",
+    default: false
+})

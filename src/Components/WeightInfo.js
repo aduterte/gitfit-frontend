@@ -44,12 +44,15 @@ export default function WeightInfo () {
     const logWeight = (e) => {
         e.preventDefault()
         const obj = {user_id: user.id, lbs: 0, kg: 0}
+        let logW = 0
         if(weightInput.type ==="lbs"){ 
             obj.lbs = weightInput.weight
             obj.kg = obj.lbs / 2.205
+            logW = weightInput.weight
         } else if (weightInput.type === "kg") {
             obj.kg = weightInput.weight
             obj.lbs = obj.kg * 2.205
+            logW = obj.lbs
         }
         e.target.reset()
         setWeightInput({...weightInput, type: "lbs"})
@@ -62,9 +65,12 @@ export default function WeightInfo () {
         }).then(resp => resp.json())
         .then(data => {
             console.log(data)
-            const updatedUser = {...user, weights: [...user.weights, data]}
-            console.log(updatedUser) 
-            setUser(updatedUser)
+            if(!!user.weights){
+                const updatedUser = {...user, weights: [...user.weights, data]}
+                setUser(updatedUser)
+            } else {
+                setUser(data)
+            }
         })
 
         if(!userAch.find( ach => ach.code === "weight")){
@@ -82,77 +88,153 @@ export default function WeightInfo () {
             })
         }
 
+        if(!userAch.find( ach => ach.code === "halfWay")){
+            if(user.weights[0].lbs > user.goal_weight){ // want to lose weight
+                // console.log("lose weight goal")
+                if(logW < user.goal_weight + Math.abs(user.goal_weight - user.weights[0].lbs)/2){
+                    fetch(`${API}/unlocks`, {
+                        method: "POST",
+                        headers: {"Content-Type":"application/json"},
+                        body: JSON.stringify({user_id: user.id, achievement_code: "halfWay"})
+                    }).then(resp => resp.json())
+                    .then(data => {
+                        console.log(data)
+                        const a = [...achievements, data]
+                        const uA = [...userAch, data]
+                        setAchievements(a)
+                        setUserAch(uA)
+                    })
+                  console.log(true)
+                } 
+            } else {
+                if(logW > user.weights[0].lbs + Math.abs(user.goal_weight - user.weights[0].lbs)/2){
+                    fetch(`${API}/unlocks`, {
+                        method: "POST",
+                        headers: {"Content-Type":"application/json"},
+                        body: JSON.stringify({user_id: user.id, achievement_code: "halfWay"})
+                    }).then(resp => resp.json())
+                    .then(data => {
+                        console.log(data)
+                        const a = [...achievements, data]
+                        const uA = [...userAch, data]
+                        setAchievements(a)
+                        setUserAch(uA)
+                    })
+                }  
+            }   
+        }
+
+        if(!userAch.find( ach => ach.code === "goalHit")){
+            if(user.weights[0].lbs > user.goal_weight){
+                if (logW <= user.goal_weight){
+                    fetch(`${API}/unlocks`, {
+                        method: "POST",
+                        headers: {"Content-Type":"application/json"},
+                        body: JSON.stringify({user_id: user.id, achievement_code: "goalHit"})
+                    }).then(resp => resp.json())
+                    .then(data => {
+                        console.log(data)
+                        const a = [...achievements, data]
+                        const uA = [...userAch, data]
+                        setAchievements(a)
+                        setUserAch(uA)
+                    })
+                }
+            } else {
+                if (logW >= user.goal_weight){
+                    fetch(`${API}/unlocks`, {
+                        method: "POST",
+                        headers: {"Content-Type":"application/json"},
+                        body: JSON.stringify({user_id: user.id, achievement_code: "goalHit"})
+                    }).then(resp => resp.json())
+                    .then(data => {
+                        console.log(data)
+                        const a = [...achievements, data]
+                        const uA = [...userAch, data]
+                        setAchievements(a)
+                        setUserAch(uA)
+                    })
+                }
+            }
+        }
     }
+
     return (
         <>
-        {user.weights.length > 0 && 
+        
             <div className="weight-info-wrapper">
-                <div className="dashboard-title">
-                    Weight Log
-                </div>
-                <div className="weight-info">
-                    <div className="first-weight">
-                        <div className="weight-info-text">Starting Weight</div>
-                        <div className="weight-numbers">{user.weights[0].lbs}</div>
+                {!!user.weights && user.weights.length > 0 &&
+                <> 
+                    <div className="dashboard-title">
+                        Weight Log
                     </div>
-                    <div className="current-weight">
-                        <div className="weight-info-text">Current Weight </div>
-                        <div className="weight-numbers"> {user.weights[user.weights.length - 1 ].lbs}
+                    <div className="weight-info">
+                        <div className="first-weight">
+                            <div className="weight-info-text">Starting Weight</div>
+                            <div className="weight-numbers">{user.weights[0].lbs}</div>
+                        </div>
+                        <div className="current-weight">
+                            <div className="weight-info-text">Current Weight </div>
+                            <div className="weight-numbers"> {user.weights[user.weights.length - 1 ].lbs}
+                            </div>
+                        </div>
+                        <div className="goal-weight">
+                            <div className="weight-info-text">Goal Weight</div>
+                            <div className="weight-numbers">{user.goal_weight}
+                            </div>
                         </div>
                     </div>
-                    <div className="goal-weight">
-                        <div className="weight-info-text">Goal Weight</div>
-                        <div className="weight-numbers">{user.goal_weight}
-                        </div>
-                    </div>
-                </div>
-                <div className="line-chart">
-                    {user && <Line
-                    data={chart()}
-                    options={{
-                        title:{
-                            display:false,
-                            text:'Weight Log',
-                            fontSize:20
-                        },
-                        legend:{
-                            display:true,
-                            position:'bottom'
-                        },
-                        plugins: {
-                            zoom: {
-                                pan: {
-                                    enabled: true,
-                                    mode: 'x',
-                                    rangeMin: {
-                                        x: 0,
-                                        y:0,
-                                    },
-                                    rangeMax: {
-                                        x:100,
-                                        y: 400,
-                                    }
+                    <div className="line-chart">
+                        {user && 
+                        <Line
+                            data={chart()}
+                            options={{
+                                title:{
+                                    display:false,
+                                    text:'Weight Log',
+                                    fontSize:20
                                 },
-                                zoom: {
-                                    enabled: true,
-                                    mode: 'x',
-                                    rangeMin: {
-                                        x: 0,
-                                        y:50,
-                                    },
-                                    rangeMax: {
-                                        x:100,
-                                        y: 400,
+                                legend:{
+                                    display:true,
+                                    position:'bottom'
+                                },
+                                plugins: {
+                                    zoom: {
+                                        pan: {
+                                            enabled: true,
+                                            mode: 'x',
+                                            rangeMin: {
+                                                x: 0,
+                                                y:0,
+                                            },
+                                            rangeMax: {
+                                                x:100,
+                                                y: 400,
+                                            }
+                                        },
+                                        zoom: {
+                                            enabled: true,
+                                            mode: 'x',
+                                            rangeMin: {
+                                                x: 0,
+                                                y:50,
+                                            },
+                                            rangeMax: {
+                                                x:100,
+                                                y: 400,
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                        }
-                    }}
-                    />}
-                </div>
+                            }}
+                        />}
+                    </div>
+                </>
+                }
+                    
                 <div>
                     <form className="weight-form" onSubmit={logWeight}>
-                        <label>Log Weight</label><br/>
+                        <label>Log Weight</label> 
                         <input onChange={handleWeightForm} type="num" name="weight" placeholder="Enter Weight"/>
                         <select onChange={handleWeightForm} name="type" value={weightInput.type} required>
                             <option name="type" value="lbs">lbs</option>
@@ -162,7 +244,8 @@ export default function WeightInfo () {
                     </form>
                 </div>
             </div>
-            }
-            </>
+            
+            
+        </>
     )
 }

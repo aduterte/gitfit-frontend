@@ -1,5 +1,5 @@
 import React, {useEffect, useState, createRef} from "react"
-import { userAtom, userPosts } from "../Atoms/Atoms"
+import { userAtom, userPosts, userFollowers, userFollowing } from "../Atoms/Atoms"
 import { useRecoilValue, useRecoilState } from "recoil"
 import {Link} from "react-router-dom"
 import CreatePost from "../Components/CreatePost"
@@ -13,8 +13,8 @@ export default function ProfileContainer(props){
     const user = useRecoilValue(userAtom),  
         [posts, setPosts] = useRecoilState(userPosts),
         [newPost, setNewPost] = useState(false),
-        [editProfile, setEditProfile] = useState(false),
-        profile = createRef()
+        followers = useRecoilValue(userFollowers),
+        following = useRecoilValue(userFollowing)
         
     useEffect(()=>{
         fetch(`${API}/users/${user.id}`)
@@ -60,10 +60,10 @@ export default function ProfileContainer(props){
         }
     }
 
-    const toggleEdit = () => {
-        setEditProfile(!editProfile)
-        // profile.current.classList.toggle('is-toggle')
-    }
+    // const toggleEdit = () => {
+    //     setEditProfile(!editProfile)
+    //     // profile.current.classList.toggle('is-toggle')
+    // }
     return (
         <div id="profile-container">
             <div id="profile-info">
@@ -71,13 +71,25 @@ export default function ProfileContainer(props){
                     <div className="profile-picture" style={{backgroundImage: `url(${user.avatar})`}}/>
                     <h2>{user.name.split(" ")[0]}<br/>{user.name.split(" ")[1] === undefined ? null : user.name.split(" ")[1]}</h2>
                 </div>
+                <div className="dashboard-followers-container">
+                    <div className="dashboard-followers">
+                        <h4>Followers</h4>
+                        <div>{followers && followers.length}</div>  
+                        
+                    </div>
+                    <div className="dashboard-following">
+                        <h4>Following</h4>
+                        <div>{following && following.length}</div>  
+                    </div>
+
+                </div>
                 <div className="profile-info-bottom">
                     <div className="profile-latest-activity">
                         <div style={{fontWeight: "bold"}}>
                             Activities Completed
                         </div>
                         <br/>
-                        <div>
+                        <div className="activity-count">
                             {totalActivities()}
                         </div>
                         <br/>
@@ -90,29 +102,30 @@ export default function ProfileContainer(props){
                         </div>}
                     </div>
                     <br/>
-                    {/* <div className="profile-button" onClick={()=>setNewPost(!newPost)}>New Post</div>
-                    <h4>Tools</h4>
-                
-                    <Link to="/create-workout"><div className="profile-button">Create a Routine</div></Link>
-                    <Link to="/routines"><div className="profile-button">My Routines</div></Link>
-                    <div onClick={toggleEdit} className="profile-button">Edit Profile</div> */}
+                  
                 </div>
             </div>
             <div id="profile-main-container">
-                {!!posts && <div id="profile-main">
-                
-                    <div className="post-selector">My Posts</div>
-                    <div>
-                        {posts && posts.map((post, index) => <Post key={post.id} post={post} index={index}/>)}
+              
+                <div id="profile-main">
+                    < div className="profile-post-header">
+                        <div className="post-selector">My Posts</div>
+                        <div onClick={()=>setNewPost(!newPost)}className="new-post-button">New Post</div>
                     </div>
-                </div>}
-                {editProfile &&
+                    <div className="profile-post-container">       
+                        {!!posts && <div>
+                            {posts && posts.map((post, index) => <Post key={post.id} post={post} index={index}/>)}
+                        </div>}
+                    </div> 
+                </div>
+                {/* {editProfile &&
                 <div ref={profile} className="profile-edit">
                     <EditProfile />
                 </div>    
-                }
+                } */}
                 <Dashboard />
             </div>
+            
             {newPost &&
                     <div className="post-modal">
                         {/* {begin create post modal} */}
@@ -124,6 +137,7 @@ export default function ProfileContainer(props){
                     {/* {end create post modal} */}
                     </div>
                     }
+            
         </div>
     )
 }

@@ -67,19 +67,25 @@ export default function ProfileShowContainer(props){
         <>
         {user && 
         <div className="show-profile-container">
+            <div className="show-profile-left">
+                <div className="show-profile-header" style={{backgroundImage: 'url("/images/profile_backdrop.jpeg")'}}>
+                    {user.avatar ? <div className="show-profile-picture" style={{backgroundImage: `url(${user.avatar})`}}/> : <div className="profile-picture" style={{backgroundImage: `url(https://pcafalcons.com/wp-content/uploads/2019/08/no-profile-picture-icon-female-0-e1564976045606.jpg)`}}/>}
+                    {user.name}
+                    {isFollowed() ? <div onClick={unfollowUser}>Unfollow</div>:<div onClick={followUser}>Follow</div> }
+                    Activities: {totalActivities()}
+                    <div>
+                        Followers: {user.followers.length}
+                    </div>
+                    <div>
+                        Following: {user.followed.length}
+                    </div>
+                </div>
             
-            {user.avatar ? <div className="profile-picture" style={{backgroundImage: `url(${user.avatar})`}}/> : <div className="profile-picture" style={{backgroundImage: `url(https://pcafalcons.com/wp-content/uploads/2019/08/no-profile-picture-icon-female-0-e1564976045606.jpg)`}}/>}
-            {user.name}
-            {isFollowed() ? <div onClick={unfollowUser}>Unfollow</div>:<div onClick={followUser}>Follow</div> }
-            Activities: {totalActivities()}
-            <div>
-                Followers: {user.followers.length}
-            </div>
-            <div>
-                Following: {user.followed.length}
-            </div>
-            <div>
-                {posts && posts.map((post, index) => <Post key={post.id} post={post} index={index}/>)}
+                <div className="show-profile-posts-container">
+                    <div className="show-profile-posts-wrapper">
+                    {posts && posts.map((post, index) => <Post key={post.id} post={post} index={index}/>)}
+                    </div>
+                </div>
             </div>
         </div>
         }

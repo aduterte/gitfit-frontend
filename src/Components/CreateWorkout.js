@@ -1,5 +1,5 @@
 import React,{useState} from "react"
-import { selectedExeForWorkout, userAtom, userRoutines } from "../Atoms/Atoms"
+import { selectedExeForWorkout, userAtom, userRoutines, sessionAchievements, userAchievements } from "../Atoms/Atoms"
 import { useRecoilState, useRecoilValue } from "recoil"
 import CreateWorkoutInput from "../Components/CreateWorkoutForm"
 import {API} from "../constants/index"
@@ -9,8 +9,9 @@ export default function CreateWorkout(){
         [routineName, setRoutineName] = useState(""),
         user = useRecoilValue(userAtom),
         [myRoutines, setMyRoutines] = useRecoilState(userRoutines),
-        [tempRoutine, setTempRoutine] = useState({}),
-        [tempWorkouts, setTempWorkout] = useState([])
+        [tempWorkouts, setTempWorkout] = useState([]),
+        [achievements, setAchievements] = useRecoilState(sessionAchievements),
+        [userAch, setUserAch] = useRecoilState(userAchievements)
 
     const handleRemove = (i) => {
         const exercises = [...selected]
@@ -71,6 +72,24 @@ export default function CreateWorkout(){
             setMyRoutines(array)
             // console.log(tempRoutine)
         })
+        e.target.reset()
+        setRoutineName("")
+        setSelected([])
+
+        if(!userAch.find( ach => ach.code === "routine")){
+            fetch(`${API}/unlocks`, {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({user_id: user.id, achievement_code: "routine"})
+            }).then(resp => resp.json())
+            .then(data => {
+                console.log(data)
+                const a = [...achievements, data]
+                const uA = [...userAch, data]
+                setAchievements(a)
+                setUserAch(uA)
+            })
+        }
     }
     return (
         <div className="routine-form">
