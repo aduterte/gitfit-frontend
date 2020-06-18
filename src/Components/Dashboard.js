@@ -15,11 +15,11 @@ export default function Dashboard() {
   
        
 
-    const test = () => {
-        const a = [...achievements, {name: "This Is A Test", details: "You Deserve Nothing For This. You earned nothing"}]
-        setAchievements(a)
+    // const test = () => {
+    //     const a = [...achievements, {name: "This Is A Test", details: "You Deserve Nothing For This. You earned nothing"}]
+    //     setAchievements(a)
         // console.log(achievements)
-    }
+    // }
 
     // console.log(user.weights)
     return (
@@ -30,7 +30,7 @@ export default function Dashboard() {
             <WeightInfo/>
             
            
-            <button onClick={test}>Test</button>        
+                
         </div>
     )
 }

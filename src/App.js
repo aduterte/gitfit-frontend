@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
-import { userAtom, exeAtom, userRoutines, userFollowing, userFollowers, userAchievements } from "./Atoms/Atoms"
-import { useSetRecoilState, useRecoilState } from "recoil"
+import { searchUsers, userList, userAtom, exeAtom, userRoutines, userFollowing, userFollowers, userAchievements } from "./Atoms/Atoms"
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil"
 import './App.css'
 import {API} from "./constants/index"
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 import Nav from "./Containers/NavContainer"
 import CreateWorkoutContainer from "./Containers/CreateWorkoutContainer"
-
+import SearchUserModal from "./Containers/SearchUserModal"
 import ProfileContainer from "./Containers/ProfileContainer"
 import LoginContainer from './Containers/LoginContainer';
 import RoutineContainer from './Containers/RoutineContainer';
@@ -21,7 +21,9 @@ function App() {
     setRoutines = useSetRecoilState(userRoutines),
     setFollowing = useSetRecoilState(userFollowing),
     setFollowers = useSetRecoilState(userFollowers),
-    setAchievements = useSetRecoilState(userAchievements)
+    setAchievements = useSetRecoilState(userAchievements),
+    setUsers = useSetRecoilState(userList),
+    showSearch = useRecoilValue(searchUsers)
 
   useEffect(()=>{
     if(localStorage.getItem("token")) {
@@ -47,6 +49,14 @@ function App() {
     .then(data => setExercises(data))
   },[setExercises])
   
+  useEffect(()=>{
+    fetch(`${API}/users`)
+    .then(resp => resp.json())
+    .then(data => {
+      
+      setUsers(data)
+    })
+  })
   
 
   return (
@@ -77,6 +87,7 @@ function App() {
             {!user.name ? <LoginContainer/>: <Redirect to="/profile"/>}
           </Route>
         </Switch>
+        {showSearch && <SearchUserModal />}
         
       </div>
     </Router>

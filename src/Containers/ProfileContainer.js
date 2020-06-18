@@ -1,11 +1,10 @@
 import React, {useEffect, useState, createRef} from "react"
-import { userAtom, userPosts, userFollowers, userFollowing } from "../Atoms/Atoms"
-import { useRecoilValue, useRecoilState } from "recoil"
+import { searchUsers, userAtom, userPosts, userFollowers, userFollowing } from "../Atoms/Atoms"
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil"
 import {Link} from "react-router-dom"
 import CreatePost from "../Components/CreatePost"
 import { API } from "../constants/index"
 import Post from "../Components/Post"
-import EditProfile from "../Components/EditProfile"
 import Dashboard from "../Components/Dashboard"
 
 export default function ProfileContainer(props){
@@ -14,7 +13,9 @@ export default function ProfileContainer(props){
         [posts, setPosts] = useRecoilState(userPosts),
         [newPost, setNewPost] = useState(false),
         followers = useRecoilValue(userFollowers),
-        following = useRecoilValue(userFollowing)
+        following = useRecoilValue(userFollowing),
+        setShowSearch = useSetRecoilState(searchUsers)
+
         
     useEffect(()=>{
         fetch(`${API}/users/${user.id}`)
@@ -71,7 +72,7 @@ export default function ProfileContainer(props){
                     <div className="profile-picture" style={{backgroundImage: `url(${user.avatar})`}}/>
                     <h2>{user.name.split(" ")[0]}<br/>{user.name.split(" ")[1] === undefined ? null : user.name.split(" ")[1]}</h2>
                 </div>
-                <div className="dashboard-followers-container">
+                <div  className="dashboard-followers-container">
                     <div className="dashboard-followers">
                         <h4>Followers</h4>
                         <div>{followers && followers.length}</div>  
@@ -79,7 +80,7 @@ export default function ProfileContainer(props){
                     </div>
                     <div className="dashboard-following">
                         <h4>Following</h4>
-                        <div>{following && following.length}</div>  
+                        <div onClick={()=>setShowSearch(true)}>{following && following.length}</div>  
                     </div>
 
                 </div>

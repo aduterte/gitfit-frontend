@@ -54,3 +54,13 @@ export const editProfileAtom = atom({
     key: "edit-profile",
     default: false
 })
+
+export const searchUsers = atom({
+    key: "search-user",
+    default: false
+})
+
+export const userList = atom({
+    key: "user-list",
+    default: []
+})
