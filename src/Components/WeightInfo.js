@@ -2,6 +2,9 @@ import React, {useState} from "react"
 import {userAtom, sessionAchievements, userAchievements} from "../Atoms/Atoms"
 import {useRecoilState} from "recoil"
 import { API } from "../constants/index"
+import { Line } from "react-chartjs-2"
+import * as Zoom from "chartjs-plugin-zoom"
+import Hammer from "hammerjs"
 
 export default function WeightInfo () {
     const [user, setUser] = useRecoilState(userAtom)
@@ -13,6 +16,29 @@ export default function WeightInfo () {
         const {name, value} = e.target
         setWeightInput({...weightInput, [name]: value})
 
+    }
+
+    const chart = () => {
+        const labels = user.weights.map(w => {
+            let temp = new Date(w.created_at)
+            return temp.toString().substring(4, 15)
+        })
+
+        const dataset = {
+            labels: labels,
+            datasets: [
+                {
+                  label: 'Lbs',
+                  fill: false,
+                  lineTension: 0.5,
+                  backgroundColor: 'rgb(55, 178, 255)',
+                  borderColor: 'rgb(55, 178, 255)',
+                  borderWidth: 2,
+                  data: user.weights.map(w => w.lbs)
+                }
+              ]
+        }
+        return dataset
     }
 
     const logWeight = (e) => {
@@ -79,6 +105,50 @@ export default function WeightInfo () {
                         <div className="weight-numbers">{user.goal_weight}
                         </div>
                     </div>
+                </div>
+                <div className="line-chart">
+                    {user && <Line
+                    data={chart()}
+                    options={{
+                        title:{
+                            display:false,
+                            text:'Weight Log',
+                            fontSize:20
+                        },
+                        legend:{
+                            display:true,
+                            position:'bottom'
+                        },
+                        plugins: {
+                            zoom: {
+                                pan: {
+                                    enabled: true,
+                                    mode: 'x',
+                                    rangeMin: {
+                                        x: 0,
+                                        y:0,
+                                    },
+                                    rangeMax: {
+                                        x:100,
+                                        y: 400,
+                                    }
+                                },
+                                zoom: {
+                                    enabled: true,
+                                    mode: 'x',
+                                    rangeMin: {
+                                        x: 0,
+                                        y:50,
+                                    },
+                                    rangeMax: {
+                                        x:100,
+                                        y: 400,
+                                    }
+                                }
+                            }
+                        }
+                    }}
+                    />}
                 </div>
                 <div>
                     <form className="weight-form" onSubmit={logWeight}>

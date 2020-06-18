@@ -152,11 +152,11 @@ export default function Post(props){
                 <div className="post-header-right">
                     {+user.id === +currentUser.id &&
                     <div className="post-header-hamburger">&#9776;
-                    <div className="post-edit-menu">
-                        <div onClick={editPost} className="post-edit-menu-edit"> edit post</div>
-                        <div onClick={deletePost} className="post-edit-menu-delete"> delete post</div>
+                        <div className="post-edit-menu">
+                            <div onClick={editPost} className="post-edit-menu-edit"> edit post</div>
+                            <div onClick={deletePost} className="post-edit-menu-delete"> delete post</div>
 
-                    </div>
+                        </div>
                     
                     </div>
                     }

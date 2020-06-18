@@ -53,15 +53,15 @@ export default function CreateWorkout(){
                     body: JSON.stringify(workout)
                 })
                 .then(resp => resp.json())
-                .then(workout => {
+                // .then(workout => {
                     // console.log(workout)
                     // debugger
                     // workArray = [...workArray, workout]
-                    setTempWorkout([...tempWorkouts, workout])
+                    // setTempWorkout([...tempWorkouts, workout])
 
                 
                 
-                })
+                // })
             }) // end of for each
             const array = [...myRoutines, {...routine, workouts: tempWorkouts}]
             // const array = [...myRoutines, {...routine, workouts: workArray}]

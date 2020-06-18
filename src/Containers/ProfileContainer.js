@@ -41,7 +41,16 @@ export default function ProfileContainer(props){
     
     const latestActivity = () => {
         let latest = posts.find(p => !!p.routine)
+        // console.log(latest)
         return latest
+    }
+
+    const latestDate = () => {
+        let latestDate = latestActivity().created_at
+        let d = new Date(latestDate)
+        
+        return d.toString()
+        
     }
 
     const totalActivities = () => {
@@ -77,16 +86,16 @@ export default function ProfileContainer(props){
                         {posts && 
                         <div>
                             {latestActivity() && <div> <span className="fas">&#xf44b; &nbsp;</span>{latestActivity().routine.name}</div>}
-                            {latestActivity() && <div>on  {Date(latestActivity().created_at).substring(0,15)}</div>}
+                            {latestActivity() && <div>on  {latestDate().substring(0,15)}</div>}
                         </div>}
                     </div>
                     <br/>
-                <div className="profile-button" onClick={()=>setNewPost(!newPost)}>New Post</div>
-                <h4>Tools</h4>
+                    {/* <div className="profile-button" onClick={()=>setNewPost(!newPost)}>New Post</div>
+                    <h4>Tools</h4>
                 
-                <Link to="/create-workout"><div className="profile-button">Create a Routine</div></Link>
-                <Link to="/routines"><div className="profile-button">My Routines</div></Link>
-                <div onClick={toggleEdit} className="profile-button">Edit Profile</div>
+                    <Link to="/create-workout"><div className="profile-button">Create a Routine</div></Link>
+                    <Link to="/routines"><div className="profile-button">My Routines</div></Link>
+                    <div onClick={toggleEdit} className="profile-button">Edit Profile</div> */}
                 </div>
             </div>
             <div id="profile-main-container">

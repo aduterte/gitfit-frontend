@@ -6,12 +6,13 @@ import {API} from "./constants/index"
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 import Nav from "./Containers/NavContainer"
 import CreateWorkoutContainer from "./Containers/CreateWorkoutContainer"
-import Footer from "./Components/Footer"
+
 import ProfileContainer from "./Containers/ProfileContainer"
 import LoginContainer from './Containers/LoginContainer';
 import RoutineContainer from './Containers/RoutineContainer';
 import ProfileShowContainer from './Containers/ProfileShowContainer';
 import Achievements from "./Components/Achievement"
+import MainPage from './Containers/MainPage';
 
 function App() {
 
@@ -32,7 +33,7 @@ function App() {
         
         setUser(user)
         setRoutines(user.routines)
-        setFollowers(user.followers)
+        setFollowers(user.followers) 
         setFollowing(user.followed)
         setAchievements(user.achievements)
         
@@ -46,12 +47,15 @@ function App() {
     .then(data => setExercises(data))
   },[setExercises])
   
+  
+
   return (
     <Router>
       <div className="App">
         <Achievements/>
         <Nav />
         <Switch>
+          <Route exact path="/" render={()=><MainPage/>}/> 
           <Route path="/create-workout">
           <CreateWorkoutContainer/> 
             {/* {user.name ? <CreateWorkoutContainer/> : <Redirect to="/login"/>} */}
@@ -60,7 +64,7 @@ function App() {
             {user.name ? <RoutineContainer /> : <Redirect to="/login"/>}
           </Route>
           <Route exact path="/profile" >
-            {user.name ? <ProfileContainer/>: <Redirect to="/login"/>}
+            {user.name ? <ProfileContainer/>: <Redirect to="/"/>}
           </Route>
           <Route exact path="/profile/:id" render={
             (routerProps) => { 

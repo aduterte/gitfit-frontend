@@ -75,9 +75,14 @@ export default function LoginContainer(){
                     </form>
                     
                 </div>
+            
             <div className="login-image" ref={loginImage}>
-                <div><h2>{isLogin ? "Not" : "Already"} a member? </h2> Click <button onClick={handleToggle}>Here</button> to {isLogin ? "Sign up" : "Login"}</div>
-                </div>
+                
+                    <img src="/images/boglogogray.png" alt="logo"/>
+                    <div>
+                        <h2>{isLogin ? "Not" : "Already"} a member? </h2> Click <button onClick={handleToggle}>Here</button> to {isLogin ? "Sign up" : "Login"}
+                    </div>
+                    </div>  
             </div>
         </div>
     )
