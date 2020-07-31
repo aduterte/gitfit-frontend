@@ -89,6 +89,7 @@ export default function WeightInfo () {
         }
 
         if(!userAch.find( ach => ach.code === "halfWay")){
+            if(user.weights[0] > 0){
             if(user.weights[0].lbs > user.goal_weight){ // want to lose weight
                 // console.log("lose weight goal")
                 if(logW < user.goal_weight + Math.abs(user.goal_weight - user.weights[0].lbs)/2){
@@ -123,8 +124,9 @@ export default function WeightInfo () {
                 }  
             }   
         }
-
+    }
         if(!userAch.find( ach => ach.code === "goalHit")){
+            if(user.weights[0] > 0){
             if(user.weights[0].lbs > user.goal_weight){
                 if (logW <= user.goal_weight){
                     fetch(`${API}/unlocks`, {
@@ -156,7 +158,7 @@ export default function WeightInfo () {
                     })
                 }
             }
-        }
+        }}
     }
 
     return (

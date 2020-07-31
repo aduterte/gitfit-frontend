@@ -48,7 +48,7 @@ export default function SeachUserModal () {
                 </div>
                 }
             </div>
-            <div onClick={()=>setShow(false)}>Close</div>
+            <div className="search-close" onClick={()=>setShow(false)}>Close</div>
         </div>
     )
 }

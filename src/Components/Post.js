@@ -207,7 +207,7 @@ export default function Post(props){
                                 {likes && likeAvatars().map((like, index)=><div className="post-like-avatar" key={index} style={{backgroundImage: `url(${like.user.avatar})`}}/>)}
                             </div>
                             <div className="post-like-counter">
-                        {!!likes ? `${likes.length} Likes`: "Be the first to like"} and comment counter</div>
+                        {!!likes && likes.length > 0 ? `${likes.length} Likes`: "Be the first to like"}</div>
                         </div>
                         <div className="post-like-bar-right">
                             {checkLike() ? 

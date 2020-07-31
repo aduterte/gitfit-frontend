@@ -47,6 +47,7 @@ export default function EditProfile(){
         }).then(resp => resp.json())
         .then(data => setUser(data))
         console.log(obj)
+        setEditProfile(false)
     }
     
     return (
