@@ -1,6 +1,6 @@
 import React, {  useState } from "react"
-import { userAtom, sessionAchievements } from "../Atoms/Atoms"
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { userAtom, sessionAchievements, userAchievements} from "../Atoms/Atoms"
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil"
 
 
 import WeightInfo from "./WeightInfo"
@@ -8,7 +8,9 @@ import WeightInfo from "./WeightInfo"
 export default function Dashboard() {
 
     const [user, setUser] = useRecoilState(userAtom),
-        [achievements, setAchievements] = useRecoilState(sessionAchievements)
+        [achievements, setAchievements] = useRecoilState(sessionAchievements),
+        userAch = useRecoilValue(userAchievements)
+
 
  
 
@@ -28,6 +30,9 @@ export default function Dashboard() {
                 My Dashboard
             </div>
             <WeightInfo/>
+            <div>
+                {userAch.map((ach, i) => <div key={`ach${i}`}>{ach.name}</div>)}
+            </div>
             
            
                 
