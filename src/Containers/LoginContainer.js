@@ -1,5 +1,5 @@
 import React, {useState, createRef} from "react"
-import { userAtom, userRoutines, userFollowers, userFollowing, editProfileAtom } from "../Atoms/Atoms"
+import { userAtom, userAchievements, userRoutines, userFollowers, userFollowing, editProfileAtom } from "../Atoms/Atoms"
 import { useSetRecoilState } from "recoil"
 import { API } from "../constants/index"
 
@@ -10,6 +10,7 @@ export default function LoginContainer(){
         setFollowing = useSetRecoilState(userFollowing),
         setFollowers = useSetRecoilState(userFollowers),
         setEditProfile = useSetRecoilState(editProfileAtom),
+        setUserAch = useSetRecoilState(userAchievements),
         [input, setInput] = useState({name: "", password: "", email: "", passwordConfirm: ""}),
         [isLogin, setIsLogin] = useState(true),
         loginForm = createRef(),
@@ -35,6 +36,8 @@ export default function LoginContainer(){
             setRoutines(data.user.routines)
             setFollowers(data.user.followers)
             setFollowing(data.user.followed)
+            setUserAch(data.user.achievements)
+
             
             
         })

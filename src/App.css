@@ -2035,3 +2035,25 @@ margin-left: 10px;
   font-weight:bold;
   font-size: 18px;
 }
+
+.dashboard-achievement {
+  background: white;
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 15px;
+  width: 500px;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.dashboard-achievement-title {
+ 
+  font-size: 22px;
+  color: rgba(85, 85, 85, 0.81);
+}
+
+.dashboard-achievement-name {
+  color: rgb(161, 161, 161);
+  font-size: 18px;
+}
+

@@ -1,4 +1,4 @@
-import React, {  useState } from "react"
+import React, {  useState, useEffect} from "react"
 import { userAtom, sessionAchievements, userAchievements} from "../Atoms/Atoms"
 import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil"
 
@@ -9,12 +9,12 @@ export default function Dashboard() {
 
     const [user, setUser] = useRecoilState(userAtom),
         [achievements, setAchievements] = useRecoilState(sessionAchievements),
-        userAch = useRecoilValue(userAchievements)
+        userAch = useRecoilValue(userAchievements),
+        image = "pngfuel.com.png"
 
 
  
-
-  
+    
        
 
     // const test = () => {
@@ -30,10 +30,14 @@ export default function Dashboard() {
                 My Dashboard
             </div>
             <WeightInfo/>
-            <div>
-                {userAch.map((ach, i) => <div key={`ach${i}`}>{ach.name}</div>)}
+            {userAch.length >= 1 && 
+            <div className="dashboard-achievement">
+                <div className="dashboard-achievement-title">
+                    Achievements
+                </div>
+                {userAch.map((ach, i) => <div key={`ach${i}`} className="dashboard-achievement-name"><img style={{width: "25px"}} src={image} alt="trophy"/>{ach.name}</div>)}
             </div>
-            
+            }
            
                 
         </div>
