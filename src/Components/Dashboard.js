@@ -12,18 +12,6 @@ export default function Dashboard() {
         userAch = useRecoilValue(userAchievements),
         image = "pngfuel.com.png"
 
-
- 
-    
-       
-
-    // const test = () => {
-    //     const a = [...achievements, {name: "This Is A Test", details: "You Deserve Nothing For This. You earned nothing"}]
-    //     setAchievements(a)
-        // console.log(achievements)
-    // }
-
-    // console.log(user.weights)
     return (
         <div className="dashboard">
             <div className="dashboard-title">
