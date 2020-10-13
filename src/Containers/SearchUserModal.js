@@ -30,7 +30,7 @@ export default function SeachUserModal () {
                     </div>
                 </div>
                 <div className="search-user-search">
-
+                    <input type="text" />
                 </div>
                 {selector === "following" &&
                 <div className="search-user-following-container">

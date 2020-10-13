@@ -30,7 +30,7 @@ export default function LoginContainer(){
             body: JSON.stringify({email: input.email, password: input.password})
         }).then(resp => resp.json())
         .then(data => {
-            debugger
+            // debugger
             localStorage.setItem("token", data.token)
             setUser(data.user)
             setRoutines(data.user.routines)
