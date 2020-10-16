@@ -9,10 +9,15 @@ export default function SeachUserModal () {
         followers = useRecoilValue(userFollowers),
         [selector, setSelector] = useState("following"),
         users = useRecoilValue(userList),
-        setShow = useSetRecoilState(searchUsers)
+        setShow = useSetRecoilState(searchUsers),
+        [search, setSearch] = useState("")
 
     const handleClick = () =>{
         console.log("test")
+    }
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value)
     }
     
     return (
@@ -43,7 +48,7 @@ export default function SeachUserModal () {
                 {selector === "users" &&
                 <div className="search-user-users-container">
                      <div className="search-user-search">
-                    <input type="text" />
+                    <input type="text" value={search} placeholder="Enter Name" onChange={handleSearch}  />
                 </div>
                     {users && users.map(user => <SearchResultUser key={user.id} user={user} onClick={handleClick} />)}
                 </div>
