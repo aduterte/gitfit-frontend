@@ -29,9 +29,7 @@ export default function SeachUserModal () {
                         all users
                     </div>
                 </div>
-                <div className="search-user-search">
-                    <input type="text" />
-                </div>
+               
                 {selector === "following" &&
                 <div className="search-user-following-container">
                     {following && following.map(user => <SearchResultUser key={user.id} user={user} />)}
@@ -44,6 +42,9 @@ export default function SeachUserModal () {
                 }
                 {selector === "users" &&
                 <div className="search-user-users-container">
+                     <div className="search-user-search">
+                    <input type="text" />
+                </div>
                     {users && users.map(user => <SearchResultUser key={user.id} user={user} onClick={handleClick} />)}
                 </div>
                 }
